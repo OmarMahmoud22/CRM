@@ -11,7 +11,7 @@ const LeadMiddleware = async (req, res, next) => {
       return res.status(401).json({ msg: "not authorized" });
     next();
   } catch (error) {
-    res.status(500).json({ msg: "server error" });
+    res.status(500).json({ msg: error.message });
   }
 };
 

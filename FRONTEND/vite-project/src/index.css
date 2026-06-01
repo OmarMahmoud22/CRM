@@ -12,7 +12,7 @@
   --color-icon: #64748b;
   --color-line: #e2e8f0;
   --color-header: #001849;
-  --color-purp: #f2f3ff;
+  --color-purp: #D0E1FB;
   --color-dark-black: #191b24;
   --bg-bob: #dae1ff;
   --shadow-avatar: 0px 1px 2px 0px #0000000d;
@@ -27,4 +27,7 @@
   body {
     @apply font-inter bg-white;
   }
+}
+body{
+  background-color: #F2F4F6;
 }

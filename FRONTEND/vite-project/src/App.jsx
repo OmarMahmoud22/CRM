@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Register from "./Compnent/pages/Regester/Regester";
 import Dashbourd from "./Compnent/Dash/Dashbourd";
 import AuthRoutes from "./Compnent/AuthRoutes/AuthRoutes";
+import Layout from "./Compnent/Layout/Layout";
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -15,12 +16,18 @@ const routes = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/dashbord",
-    element: (
-      <AuthRoutes>
-        <Dashbourd />,
-      </AuthRoutes>
-    ),
+    path: "/start",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashbord",
+        element: (
+          <AuthRoutes>
+            <Dashbourd />
+          </AuthRoutes>
+        ),
+      },
+    ],
   },
 ]);
 

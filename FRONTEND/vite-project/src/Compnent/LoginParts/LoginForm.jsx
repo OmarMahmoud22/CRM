@@ -28,7 +28,7 @@ export default function LoginForm() {
 
       setServererror("");
 
-      navigate("/dashbord");
+      navigate("/start/dashbord");
     } catch (error) {
       setServererror(error.response?.data?.msg || "Login failed");
     }
