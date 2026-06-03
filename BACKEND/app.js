@@ -6,7 +6,7 @@ app.use(express.json());
 app.use(cors("*"));
 const mogoose = require("mongoose");
 const morgan = require('morgan')
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const main = require('./config/db')
 //-----------------------------------------------------------------------------------
 

@@ -47,7 +47,7 @@ const login = async(req,res)=>{
     
   } catch (error) {
     console.log(error)
-    res.status(500).json({msg:"server error"})
+    res.status(500).json({msg:"server error" , error:error.message})
   }
 }
 module.exports = {regester , login}

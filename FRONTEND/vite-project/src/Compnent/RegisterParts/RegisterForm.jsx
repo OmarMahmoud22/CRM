@@ -24,7 +24,7 @@ export default function RegisterForm() {
 
       const token = localStorage.getItem("token");
 
-      const res = await axios.post("http://localhost:3000/api/register", data, {
+      const res = await axios.post("http://localhost:5000/api/register", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -130,9 +130,9 @@ export default function RegisterForm() {
           </label>
 
           <div className="mt-2 grid grid-cols-2 gap-2 rounded-lg border border-slate-100 bg-slate-50 p-2">
-            {roles.map((item) => (
+            {roles.map((item , index) => (
               <button
-                key={item}
+                key={index}
                 type="button"
                 onClick={() => setRole(item)}
                 className={`

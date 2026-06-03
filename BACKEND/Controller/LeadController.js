@@ -12,12 +12,11 @@ const CreateLead = async (req, res) => {
         .status(400)
         .json({ msg: error.details.map((err) => err.message) });
 
-    const { name, phone, email, status, source } = value;
+    const { name, phone, email, source } = value;
     const data = await Lead.create({
       name,
       phone,
       email,
-      status,
       source,
     });
     res.status(201).json({ msg: "done", data });

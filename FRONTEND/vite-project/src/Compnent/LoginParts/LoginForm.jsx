@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import { jwtDecode } from "jwt-decode";
 export default function LoginForm() {
   const [servererror, setServererror] = useState("");
 
@@ -22,13 +22,20 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:3000/api/login", data);
-
-      localStorage.setItem("token", res.data.token);
+      const res = await axios.post("http://localhost:5000/api/login", data);
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      // localStorage.setItem("role", res.data.use.role);
 
       setServererror("");
-
-      navigate("/dashbord");
+      const decoded = jwtDecode(token);
+      if (decoded.role == "agent") {
+        navigate("/start/agent-dashbourd");
+      } else if (decoded.role == "admin") {
+        navigate("/start/admin-dashbourd");
+      } else {
+        navigate("/AddeLead");
+      }
     } catch (error) {
       setServererror(error.response?.data?.msg || "Login failed");
     }

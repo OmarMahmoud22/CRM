@@ -2,7 +2,7 @@ const User = require("../Models/User");
 
 const Lead = require("../Models/Lead");
 const { Assignto } = require("../Controller/LeadController");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const InformationLead = async (req, res) => {
   try {
     const user_id = new mongoose.Types.ObjectId(req.user.id);
@@ -13,17 +13,37 @@ const InformationLead = async (req, res) => {
         },
       },
       {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 },
+        $facet: {
+          StatusStats: [
+            {
+              $group: {
+                _id: "$status",
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          SourceState: [
+            {
+              $group: {
+                _id: "$source",
+                count: { $sum: 1 },
+              },
+            },
+          ],
         },
       },
     ]);
 
-    const formateted = {};
-    total.forEach((item) => {
-      formateted[item._id] = item.count;
+    const formatetedStause = {};
+    const formatedSource = {};
+    total[0].StatusStats.forEach((item) => {
+      formatetedStause[item._id] = item.count;
     });
+    total[0].SourceState.forEach((item) => {
+      formatedSource[item._id] = item.count;
+    });
+    // console.log(SourceState);
+
     const totalLead = await Lead.countDocuments({
       Assignto: user_id,
     });
@@ -31,11 +51,28 @@ const InformationLead = async (req, res) => {
     res.json({
       msg: "done",
       totalLead,
-      ...formateted,
+      StatusStats: formatetedStause,
+      SourceState: formatedSource,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+    console.log(error.message);
+  }
+};
+const TotalLead = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    console.log(user_id);
+
+    const data = await Lead.find({ Assignto: user_id });
+    if (!data) return res.status(400).json({ msg: "not found" });
+    res.status(200).json({
+      data,
+      totallead: data.length,
     });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
 
-module.exports = { InformationLead };
+module.exports = { InformationLead, TotalLead };

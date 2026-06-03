@@ -25,8 +25,7 @@ const LeadSchema = mongoose.Schema(
     Assignto: {
       ref: "User",
       type: mongoose.Schema.Types.ObjectId,
-      default:null
-
+      default: null,
     },
     source: {
       type: String,
@@ -34,7 +33,7 @@ const LeadSchema = mongoose.Schema(
       default: "FaceBook",
     },
   },
-  { timestamps: true},
+  { timestamps: true },
 );
 
 const Lead = mongoose.model("Lead", LeadSchema);
