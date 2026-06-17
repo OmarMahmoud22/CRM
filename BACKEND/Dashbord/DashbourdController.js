@@ -59,20 +59,6 @@ const InformationLead = async (req, res) => {
     console.log(error.message);
   }
 };
-const TotalLead = async (req, res) => {
-  try {
-    const user_id = req.user.id;
-    console.log(user_id);
 
-    const data = await Lead.find({ Assignto: user_id });
-    if (!data) return res.status(400).json({ msg: "not found" });
-    res.status(200).json({
-      data,
-      totallead: data.length,
-    });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-};
 
-module.exports = { InformationLead, TotalLead };
+module.exports = { InformationLead };

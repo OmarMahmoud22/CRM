@@ -5,7 +5,7 @@ export default function SidebarHeader() {
     // <div className="">
       <div className="flex p-3 gap-2">
         <div className="bg-blue-600 p-2 rounded-2xl text-center">
-          <i class="fa-solid fa-user text-2xl text-white"></i>
+          <i className="fa-solid fa-user text-2xl text-white"></i>
         </div>
         <div>
           <h1 className="font-inter text-logo font-extrabold text-2xl">Sales Core</h1>

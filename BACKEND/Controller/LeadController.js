@@ -53,7 +53,7 @@ const StatusU = async (req, res) => {
       "New",
       "Contacted",
       "Inteersted",
-      "Follow-Up",
+      "Follow_Up",
       "Won",
       "Lost",
     ];
@@ -77,5 +77,30 @@ const StatusU = async (req, res) => {
   }
 };
 
+const TotalLead = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    console.log(user_id);
 
-module.exports = { CreateLead, Assignto, StatusU };
+    const leads = await Lead.find({ Assignto: user_id });
+    if (!leads) return res.status(400).json({ msg: "not found" });
+    res.status(200).json({
+      leads,
+      totallead: leads.length,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+const InfoLead = async(req,res)=>{
+  try {
+    const {id} = req.params
+    const lead = await Lead.findById(id)
+    if(!lead) return res.status(404).json({msg:"Not Found"})
+      res.status(200).json({lead})
+  } catch (error) {
+    res.status(500).json({msg:error.message})
+  }
+}
+module.exports = { CreateLead, Assignto, StatusU ,TotalLead , InfoLead};

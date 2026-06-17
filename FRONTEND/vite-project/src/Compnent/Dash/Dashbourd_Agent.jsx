@@ -54,7 +54,7 @@ export default function Dashbourd_Agent() {
 
     {
       title: "FOLLOW LEADS",
-      value: StatusStats?.Follow_up || 0,
+      value: StatusStats?.Follow_Up || 0,
       icon: <i className="fa-solid fa-phone text-yellow-500 text-xl"></i>,
     },
 
@@ -129,10 +129,36 @@ export default function Dashbourd_Agent() {
           </div>
         ))}
       </main>
-      <h1>tweeter :{SourceState?.Tweeter}</h1>
-      <h1>facebook : {SourceState?.FaceBook}</h1>
-      <h1>inestegram: {SourceState?.Inestegram}</h1>
-      <h1>from friend: {SourceState?.from_your_freind}</h1>
+      <div className="flex justify-between border rounded-2xl border-gray-200 py-5 mt-5 text-placeholder">
+        <div className="flex flex-col p-5 gap-5 w-1/2 ">
+          <div className="flex gap-4 flex-col border border-gray-300 hover:shadow-1xl bg-white rounded-2xl p-5">
+            <h1 className="text-2xl font-extrabold ">From Twitter </h1>
+            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
+              {SourceState?.Tweeter || 0}
+            </p>
+          </div>
+          <div className="flex gap-4 hover:shadow-logo transition-all duration-300 translate flex-col border  border-gray-300 hover:shadow-1xl bg-white rounded-2xl p-5">
+            <h1 className="text-2xl font-extrabold">From FaceBook </h1>
+            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
+              {SourceState?.FaceBook || 0}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col p-5 gap-5  w-1/2">
+          <div className="flex gap-4 flex-col border border-gray-300 hover:shadow-1xl rounded-2xl p-5 bg-white">
+            <h1 className="text-2xl font-extrabold"> From Instegram</h1>
+            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
+              {SourceState?.Inestagram}
+            </p>
+          </div>
+          <div className="flex gap-4 flex-col border  border-gray-300 hover:shadow-1xl bg-white rounded-2xl p-5">
+            <h1 className="text-2xl font-extrabold">From His Friend</h1>
+            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
+              {SourceState?.from_your_frind}
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

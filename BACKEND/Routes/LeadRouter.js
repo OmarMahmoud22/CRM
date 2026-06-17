@@ -1,12 +1,25 @@
 const express = require("express");
 const router = express.Router();
 
-const { CreateLead  , Assignto ,StatusU ,GetLead} = require("../Controller/LeadController");
-const {LeadMiddleware , SuberUpdate  , AgentStatus} =require("../Middleware/LeadMidllware")
+const {
+  CreateLead,
+  Assignto,
+  StatusU,
+  InfoLead,
+} = require("../Controller/LeadController");
 
-router.post('/Lead' , LeadMiddleware , CreateLead)
-router.patch('/Lead/:id' ,SuberUpdate, Assignto)
-// router.get('/Lead/:id' ,  GetLead)
-router.patch('/LeadS/:id' ,AgentStatus ,StatusU)
+const { Auth, CheckRolle } = require("../Middleware/LeadMidllware");
 
-module.exports = router
+const { TotalLead } = require("../Controller/LeadController");
+
+router.post("/Lead", Auth, CheckRolle("Dataentry"), CreateLead);
+
+router.patch("/Lead/:id", Auth, CheckRolle("SuperViser"), Assignto);
+
+router.patch("/LeadS/:id", Auth, CheckRolle("agent"), StatusU);
+
+router.get("/AllLead", Auth, CheckRolle("agent"), TotalLead);
+
+router.get("/lead/:id", Auth, CheckRolle("agent"), InfoLead);
+
+module.exports = router;

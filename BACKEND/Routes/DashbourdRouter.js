@@ -1,12 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const {
-  InformationLead,
-  TotalLead,
-} = require("../Dashbord/DashbourdController");
-const { AgentStatus } = require("../Middleware/LeadMidllware");
-router.get("/dashboard", AgentStatus, InformationLead);
-router.get("/AllLead", AgentStatus, TotalLead);
+const { InformationLead } = require("../Dashbord/DashbourdController");
+const { Auth, CheckRolle } = require("../Middleware/LeadMidllware");
+router.get("/dashboard", Auth, CheckRolle("agent"), InformationLead);
 
 module.exports = router;
