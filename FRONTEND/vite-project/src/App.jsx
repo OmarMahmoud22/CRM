@@ -11,6 +11,7 @@ import Dashbourd_Admin from "./Compnent/Dash/Dashbourd_Admin";
 import Unauthorized from "./Compnent/AuthRoutes/Unauthorized";
 import AllLead from "./Compnent/AllLead/AllLead";
 import InfoLead from "./Compnent/AllLead/InfoLead";
+import FilterStatus from "./Compnent/AllLead/FilterStatus";
 // import JustDataEntry from "./Compnent/AuthRoutes/JustDataEntry";
 const routes = createBrowserRouter([
   {
@@ -35,6 +36,14 @@ const routes = createBrowserRouter([
         ),
       },
       {
+        path: "agent-dashbourd/filter",
+        element: (
+          <RollRoutes allowedroes={["agent"]}>
+            <FilterStatus />
+          </RollRoutes>
+        ),
+      },
+      {
         path: "admin-dashbourd",
         element: (
           <RollRoutes allowedroes={["admin"]}>
@@ -51,13 +60,13 @@ const routes = createBrowserRouter([
         ),
       },
       {
-        path:"infoLead/:id",
-        element:(
+        path: "infoLead/:id",
+        element: (
           <RollRoutes allowedroes={["agent"]}>
-            <InfoLead/>
+            <InfoLead />
           </RollRoutes>
-        )
-      }
+        ),
+      },
     ],
   },
   {

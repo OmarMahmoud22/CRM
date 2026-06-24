@@ -19,7 +19,7 @@ const CreateLead = async (req, res) => {
       email,
       source,
     });
-    res.status(201).json({ msg: "done", data });
+    res.status(201).json({ msg: "Done To Created This Lead", data });
   } catch (error) {
     res.status(500).json({
       msg: "server error",
@@ -93,14 +93,26 @@ const TotalLead = async (req, res) => {
   }
 };
 
-const InfoLead = async(req,res)=>{
+const InfoLead = async (req, res) => {
   try {
-    const {id} = req.params
-    const lead = await Lead.findById(id)
-    if(!lead) return res.status(404).json({msg:"Not Found"})
-      res.status(200).json({lead})
+    const { id } = req.params;
+    const lead = await Lead.findById(id);
+    if (!lead) return res.status(404).json({ msg: "Not Found" });
+    res.status(200).json({ lead });
   } catch (error) {
-    res.status(500).json({msg:error.message})
+    res.status(500).json({ msg: error.message });
   }
-}
-module.exports = { CreateLead, Assignto, StatusU ,TotalLead , InfoLead};
+};
+const FilterByStatus = async (req, res) => {
+  try {
+    const { status } = req.query;
+
+    const data = await Lead.find({ status: status });
+    // if (data == null) return res.status(404).json({ msg: "status not found" });
+    res.status(200).json({ data, len: data.length });
+  } catch (error) {
+    res.status(500).json({ msg: "server error" });
+  }
+};
+
+module.exports = { CreateLead, Assignto, StatusU, TotalLead, InfoLead  , FilterByStatus};

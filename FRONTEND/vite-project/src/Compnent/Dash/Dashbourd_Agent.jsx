@@ -1,7 +1,11 @@
 // import React from 'react'
+import { TiGroup } from "react-icons/ti";
+import { GrInstagram } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { FaFacebookSquare } from "react-icons/fa";
+import { IoLogoTwitter } from "react-icons/io5";
+import { Link } from "react-router-dom";
 export default function Dashbourd_Agent() {
   const [data, setData] = useState({});
 
@@ -31,56 +35,63 @@ export default function Dashbourd_Agent() {
     {
       title: "TOTAL LEADS",
       value: totalLead || 0,
+      links : "/start/AllLead",
       icon: <i className="fa-solid fa-users text-logo text-xl"></i>,
     },
 
     {
       title: "NEW LEADS",
       value: StatusStats?.New || 0,
+      links:"/start/agent-dashbourd/filter?status=New",
       icon: <i className="fa-solid fa-square-plus text-logo text-xl"></i>,
     },
 
     {
       title: "LOST LEADS",
       value: StatusStats?.Lost || 0,
+      links:"/start/agent-dashbourd/filter?status=Lost",
       icon: <i className="fa-solid fa-circle-xmark text-red-500 text-xl"></i>,
     },
 
     {
       title: "WON LEADS",
       value: StatusStats?.Won || 0,
+      links:"/start/agent-dashbourd/filter?status=Won",
       icon: <i className="fa-solid fa-trophy text-green-500 text-xl"></i>,
     },
 
     {
       title: "FOLLOW LEADS",
       value: StatusStats?.Follow_Up || 0,
+      links:"/start/agent-dashbourd/filter?status=Follow_Up",
       icon: <i className="fa-solid fa-phone text-yellow-500 text-xl"></i>,
     },
 
     {
       title: "INTERESTED LEADS",
       value: StatusStats?.Inteersted || 0,
+      links:"/start/agent-dashbourd/filter?status=Inteersted",
       icon: <i className="fa-solid fa-heart text-pink-500 text-xl"></i>,
     },
 
     {
       title: "CONTACTED LEADS",
       value: StatusStats?.Contacted || 0,
+      links:"/start/agent-dashbourd/filter?status=Contacted",
       icon: <i className="fa-solid fa-envelope text-blue-500 text-xl"></i>,
     },
   ];
 
   return (
-    <section className="w-full md:p-6">
+    <section className="w-full space-y-5">
       {/* Cards */}
       <main
         className="
           grid 
           grid-cols-1
           sm:grid-cols-2
-          lg:grid-cols-4 
-          xl:grid-cols-3 
+          xl:grid-cols-3
+          2xl:grid-cols-4
           gap-4
         "
       >
@@ -91,25 +102,30 @@ export default function Dashbourd_Agent() {
               bg-white
               border
               border-gray-200
-              rounded-2xl
-              p-5
+              rounded-xl
+              p-4
+              sm:p-5
               shadow-sm
-              hover:shadow-md
+              hover:shadow-2xl
               duration-300
             "
           >
             {/* Top */}
+
             <div className="flex justify-between items-center">
-              <p
+              <Link
+                to={item.links}
                 className="
-                  text-sm
-                  md:text-base
-                  font-semibold
-                  text-gray-500
+                text-xs
+                sm:text-sm
+                font-semibold
+                text-gray-500
                 "
               >
                 {item.title}
-              </p>
+              </Link>
+              {/* {console.log(StatusStats.status)} */}
+              {/* {console.log(item.value)} */}
 
               {item.icon}
             </div>
@@ -117,11 +133,11 @@ export default function Dashbourd_Agent() {
             {/* Number */}
             <h1
               className="
-                text-3xl
-                md:text-5xl
-                font-extrabold
-                mt-4
-                text-gray-800
+              text-3xl
+              lg:text-4xl
+              font-extrabold
+              mt-4
+              text-gray-800
               "
             >
               {item.value}
@@ -129,33 +145,48 @@ export default function Dashbourd_Agent() {
           </div>
         ))}
       </main>
-      <div className="flex justify-between border rounded-2xl border-gray-200 py-5 mt-5 text-placeholder">
-        <div className="flex flex-col p-5 gap-5 w-1/2 ">
-          <div className="flex gap-4 flex-col border border-gray-300 hover:shadow-1xl bg-white rounded-2xl p-5">
-            <h1 className="text-2xl font-extrabold ">From Twitter </h1>
-            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
-              {SourceState?.Tweeter || 0}
-            </p>
+
+      <div className="grid gap-4 rounded-xl border border-gray-200 bg-white p-4 text-placeholder shadow-sm sm:p-5 lg:grid-cols-2">
+        <div className="grid gap-4">
+          <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition hover:shadow-md sm:p-5">
+            <h1 className="text-lg font-extrabold sm:text-xl">From Twitter</h1>
+            <div className="flex justify-between">
+              <p className="mt-4 text-3xl font-extrabold text-gray-800 lg:text-4xl">
+                {SourceState?.Tweeter || 0}
+              </p>
+              <IoLogoTwitter size={44} className="shrink-0 text-blue-500" />
+            </div>
           </div>
-          <div className="flex gap-4 hover:shadow-logo transition-all duration-300 translate flex-col border  border-gray-300 hover:shadow-1xl bg-white rounded-2xl p-5">
-            <h1 className="text-2xl font-extrabold">From FaceBook </h1>
-            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
-              {SourceState?.FaceBook || 0}
-            </p>
+          <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition hover:shadow-md sm:p-5">
+            <h1 className="text-lg font-extrabold sm:text-xl">From Facebook</h1>
+            <div className="flex justify-between">
+              <p className="mt-4 text-3xl font-extrabold text-gray-800 lg:text-4xl">
+                {SourceState?.FaceBook || 0}
+              </p>
+              <FaFacebookSquare size={44} className="shrink-0 text-blue-500" />
+            </div>
           </div>
         </div>
-        <div className="flex flex-col p-5 gap-5  w-1/2">
-          <div className="flex gap-4 flex-col border border-gray-300 hover:shadow-1xl rounded-2xl p-5 bg-white">
-            <h1 className="text-2xl font-extrabold"> From Instegram</h1>
-            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
-              {SourceState?.Inestagram}
-            </p>
+        <div className="grid gap-4">
+          <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition hover:shadow-md sm:p-5">
+            <h1 className="text-lg font-extrabold sm:text-xl">
+              From Instagram
+            </h1>
+            <div className="flex justify-between">
+              <p className="mt-4 text-3xl font-extrabold text-gray-800 lg:text-4xl">
+                {SourceState?.Inestagram || 0}
+              </p>
+              <GrInstagram size={44} className="shrink-0 text-orange-400" />
+            </div>
           </div>
-          <div className="flex gap-4 flex-col border  border-gray-300 hover:shadow-1xl bg-white rounded-2xl p-5">
-            <h1 className="text-2xl font-extrabold">From His Friend</h1>
-            <p className="text-3xl md:text-4xl font-extrabold mt-4 text-gray-800">
-              {SourceState?.from_your_frind}
-            </p>
+          <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition hover:shadow-md sm:p-5">
+            <h1 className="text-lg font-extrabold sm:text-xl">From Friend</h1>
+            <div className="flex justify-between">
+              <p className="mt-4 text-3xl font-extrabold text-gray-800 lg:text-4xl">
+                {SourceState?.from_your_frind || 0}
+              </p>
+              <TiGroup size={44} className="shrink-0" />
+            </div>
           </div>
         </div>
       </div>
