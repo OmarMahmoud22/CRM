@@ -29,8 +29,7 @@ const regester = async(req, res) => {
   }
 };
 const login = async(req,res)=>{
-  try {
-    
+  try {  
       const {error , value} = LoginSchema.validate(req.body , {
         abortEarly:false,
         stripUnknown: true,

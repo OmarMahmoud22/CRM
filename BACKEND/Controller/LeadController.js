@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Lead = require("../Models/Lead");
 const { LeadSchema } = require("./Validation/LeadVlidations");
+const {createNotifecation} = require("../service/NotifecationService")
 const CreateLead = async (req, res) => {
   try {
     const { error, value } = LeadSchema.validate(req.body, {
@@ -38,6 +39,18 @@ const Assignto = async (req, res) => {
     ).populate("Assignto", "full_name email");
     if (!data) return res.status(400).json({ msg: "no data" });
     res.status(201).json({ msg: "updataed", data });
+    
+    await createNotifecation({
+      userId:data.Assignto,
+      type:"lead_assigned",
+      title:"New Lead Assigned",
+      body:`Lead ${data.name} has been assigned to you .`,
+      data:{
+        leadId:data._id 
+      }
+
+
+    })
   } catch (error) {
     res.status(500).json({ msg: "server error" });
   }
@@ -96,13 +109,23 @@ const TotalLead = async (req, res) => {
 const InfoLead = async (req, res) => {
   try {
     const { id } = req.params;
-    const lead = await Lead.findById(id);
-    if (!lead) return res.status(404).json({ msg: "Not Found" });
+
+    const lead = await Lead.findOne({
+      _id: id,
+      Assignto: req.user.id,
+    });
+
+    if (!lead)
+      return res.status(404).json({
+        msg: "Lead not found",
+      });
+
     res.status(200).json({ lead });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
+
 const FilterByStatus = async (req, res) => {
   try {
     const { status } = req.query;
@@ -115,4 +138,25 @@ const FilterByStatus = async (req, res) => {
   }
 };
 
-module.exports = { CreateLead, Assignto, StatusU, TotalLead, InfoLead  , FilterByStatus};
+const AllLead = async (req, res) => {
+  try {
+    const data = await Lead.find().populate({
+      path: "Assignto",
+      select: "-_id full_name email",
+    });
+    if (!data) return res.status(200).json({ msg: "not found" });
+    res.status(200).json({ msg: "done", data });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+module.exports = {
+  CreateLead,
+  Assignto,
+  StatusU,
+  TotalLead,
+  InfoLead,
+  FilterByStatus,
+  AllLead,
+};

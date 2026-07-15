@@ -9,12 +9,22 @@ const morgan = require('morgan')
 const port = process.env.PORT || 5000;
 const main = require('./config/db')
 //-----------------------------------------------------------------------------------
-
+//Scoket.IO
+const http = require("http")
+const server = http.createServer(app)
 if (process.env.NODE_ENV === "dev") {
   app.use(morgan("dev"));
 }
+// const {Server} = require("socket.io")
+// const io = new Server(server)
+const {initSocket} = require("./socket")
+initSocket(server)
 
 
+
+const NotiRouter = require('./Routes/NotifecationRoutes')
+app.use("/api" , NotiRouter)
+//..................................................................
 const Auth_Router = require("./Routes/AuthRouter");
 app.use("/api", Auth_Router);
 //...................................................................
@@ -26,7 +36,7 @@ app.use('/api' , Dashbourd_Router)
 
 main();
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`listerned to port ${port}`);
 });
 
