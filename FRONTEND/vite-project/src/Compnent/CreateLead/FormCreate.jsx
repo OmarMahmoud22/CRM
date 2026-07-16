@@ -19,13 +19,13 @@ export default function FormCreate() {
     try {
       data.source = sourse;
       const token = localStorage.getItem("token");
-      const res = await axios.post("http://127.0.0.1:5000/api/Lead", data, {
+      const res = await axios.post("http://127.0.0.1:3000/api/Lead", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setError("");
-      setMessage(res.data.msg)
+      setMessage(res.data.msg);
       console.log(res.data);
     } catch (error) {
       setError(error.response?.data?.msg || "faild to add");
@@ -111,6 +111,11 @@ export default function FormCreate() {
       {error && (
         <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>
       )}
+      {message && (
+        <p className="rounded-lg bg-blue-50 p-3 text-sm text-blue-600">
+          {message}
+        </p>
+      )}
 
       <button
         type="submit"
@@ -118,7 +123,6 @@ export default function FormCreate() {
       >
         Create Lead
       </button>
-      <p className="text-blue-500 text-center">{message}</p>
     </form>
   );
 }

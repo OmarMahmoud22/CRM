@@ -23,7 +23,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/login", data);
+      const res = await axios.post("http://localhost:3000/api/login", data);
       const token = res.data.token;
       localStorage.setItem("token", token);
       socket.auth = {
