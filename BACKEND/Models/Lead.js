@@ -1,6 +1,5 @@
 // const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
-const { Assignto } = require("../Controller/LeadController");
 
 const LeadSchema = mongoose.Schema(
   {
@@ -35,7 +34,6 @@ const LeadSchema = mongoose.Schema(
   },
   { timestamps: true },
 );
-
 const Lead = mongoose.model("Lead", LeadSchema);
 
 module.exports = Lead;

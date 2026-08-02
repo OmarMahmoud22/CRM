@@ -5,34 +5,32 @@ const app = express();
 app.use(express.json());
 app.use(cors("*"));
 const mogoose = require("mongoose");
-const morgan = require('morgan')
-const port = process.env.PORT || 3000;
-const main = require('./config/db')
+const morgan = require("morgan");
+const port = process.env.PORT || 4000;
+const main = require("./config/db");
 //-----------------------------------------------------------------------------------
 //Scoket.IO
-const http = require("http")
-const server = http.createServer(app)
+const http = require("http");
+const server = http.createServer(app);
 if (process.env.NODE_ENV === "dev") {
   app.use(morgan("dev"));
 }
 // const {Server} = require("socket.io")
 // const io = new Server(server)
-const {initSocket} = require("./socket")
-initSocket(server)
+const { initSocket } = require("./socket");
+initSocket(server);
 
-
-
-const NotiRouter = require('./Routes/NotifecationRoutes')
-app.use("/api" , NotiRouter)
+const NotiRouter = require("./Routes/NotifecationRoutes");
+app.use("/api", NotiRouter);
 //..................................................................
 const Auth_Router = require("./Routes/AuthRouter");
 app.use("/api", Auth_Router);
 //...................................................................
-const Lead_Router = require('./Routes/LeadRouter')
-app.use('/api' , Lead_Router)
+const Lead_Router = require("./Routes/LeadRouter");
+app.use("/api", Lead_Router);
 //...................................................................
-const Dashbourd_Router = require('./Routes/DashbourdRouter')
-app.use('/api' , Dashbourd_Router)
+const Dashbourd_Router = require("./Routes/DashbourdRouter");
+app.use("/api", Dashbourd_Router);
 
 main();
 

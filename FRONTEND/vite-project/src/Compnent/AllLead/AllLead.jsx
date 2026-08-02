@@ -1,32 +1,21 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+
+import { useEffect } from "react";
 import { FaEye } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import { useDispatch , useSelector } from "react-redux";
+import { getAllLead } from "../../redux/slices/LeadsSlice";
+
+
 
 export default function AllLead() {
-  //   const [data, setData] = useState({});
-  const [lead, setLead] = useState([]);
-  const [totallead, setTotalLeads] = useState(0);
-  useEffect(() => {
-    async function feching() {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://127.0.0.1:5000/api/AllLead", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        // setData(res.data);
-        setLead(res.data.leads);
-        setTotalLeads(res.data.totallead);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    feching();
-  }, []);
+  
+  const dispatch = useDispatch()
+  useEffect(()=>{
+dispatch(getAllLead())
+  },[])
+  const leads = useSelector((state) => state.lead.leads);
   //   const { totalLead } = data;
 
   const statusClasses = {
@@ -78,7 +67,7 @@ export default function AllLead() {
           </span>
           <div>
             <p className="text-sm text-placeholdtwo">Total leads</p>
-            <p className="text-2xl font-extrabold text-header">{totallead}</p>
+            <p className="text-2xl font-extrabold text-header">{leads.length}</p>
           </div>
         </div>
       </div>
@@ -88,7 +77,7 @@ export default function AllLead() {
           <div>
             <h3 className="text-lg font-bold text-header">All Leads</h3>
             <p className="text-sm text-placeholdtwo">
-              {lead.length} records shown
+              {leads.length} records shown
             </p>
           </div>
 
@@ -113,7 +102,7 @@ export default function AllLead() {
             </thead>
 
             <tbody className="divide-y divide-line">
-              {lead.map((item) => (
+              {leads.map((item) => (
                 <tr key={item._id} className="transition hover:bg-slate-50">
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
@@ -167,7 +156,7 @@ export default function AllLead() {
             </tbody>
           </table>
 
-          {lead.length === 0 && (
+          {leads.length === 0 && (
             <div className="flex flex-col items-center justify-center gap-2 px-5 py-14 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-50 text-logo">
                 <HiOutlineUsers size={28} />

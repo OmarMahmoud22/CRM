@@ -1,53 +1,50 @@
 // import React from 'react'
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import socket from "../../Socket/Socket";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/slices/AuthSlice";
 export default function LoginForm() {
   const [servererror, setServererror] = useState("");
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { register, handleSubmit } = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
   });
-
   function reg() {
     navigate("/register");
   }
-
   const onSubmit = async (data) => {
-    try {
-      const res = await axios.post("http://localhost:3000/api/login", data);
-      const token = res.data.token;
-      localStorage.setItem("token", token);
+    const resultAction = await dispatch(login(data));
+    if (login.fulfilled.match(resultAction)) {
+      const { token, user } = resultAction.payload;
+      setServererror("");
       socket.auth = {
         token,
       };
       socket.connect();
-      // localStorage.setItem("role" ,user.role)
-      // localStorage.setItem("role", res.data.use.role);
+      switch (user.role) {
+        case "agent":
+          navigate("/start/agent-dashbourd");
+          break;
 
-      setServererror("");
-      const decoded = jwtDecode(token);
-      const userRole = decoded.role?.toString();
+        case "admin":
+          navigate("/start/admin-dashbourd");
+          break;
 
-      if (userRole === "agent") {
-        navigate("/start/agent-dashbourd");
-      } else if (userRole === "admin") {
-        navigate("/start/admin-dashbourd");
-      } else if (userRole === "TeamLeader") {
-        navigate("/start/TeamLeader");
-      } else {
-        navigate("/AddeLead");
+        case "TeamLeader":
+          navigate("/start/TeamLeader");
+          break;
+
+        default:
+          navigate("/AddeLead");
       }
-    } catch (error) {
-      setServererror(error.response?.data?.msg || "Login failed");
+    } else {
+      setServererror(resultAction.payload);
     }
   };
 

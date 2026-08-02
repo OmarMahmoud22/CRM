@@ -14,7 +14,7 @@ export default function Dashbourd_Agent() {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await axios.get("http://127.0.0.1:5000/api/dashboard", {
+        const res = await axios.get("http://127.0.0.1:4000/api/dashboard", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,49 +35,49 @@ export default function Dashbourd_Agent() {
     {
       title: "TOTAL LEADS",
       value: totalLead || 0,
-      links : "/start/AllLead",
+      links: "/start/AllLead",
       icon: <i className="fa-solid fa-users text-logo text-xl"></i>,
     },
 
     {
       title: "NEW LEADS",
       value: StatusStats?.New || 0,
-      links:"/start/agent-dashbourd/filter?status=New",
+      links: "/start/agent-dashbourd/filter?status=New",
       icon: <i className="fa-solid fa-square-plus text-logo text-xl"></i>,
     },
 
     {
       title: "LOST LEADS",
       value: StatusStats?.Lost || 0,
-      links:"/start/agent-dashbourd/filter?status=Lost",
+      links: "/start/agent-dashbourd/filter?status=Lost",
       icon: <i className="fa-solid fa-circle-xmark text-red-500 text-xl"></i>,
     },
 
     {
       title: "WON LEADS",
       value: StatusStats?.Won || 0,
-      links:"/start/agent-dashbourd/filter?status=Won",
+      links: "/start/agent-dashbourd/filter?status=Won",
       icon: <i className="fa-solid fa-trophy text-green-500 text-xl"></i>,
     },
 
     {
       title: "FOLLOW LEADS",
       value: StatusStats?.Follow_Up || 0,
-      links:"/start/agent-dashbourd/filter?status=Follow_Up",
+      links: "/start/agent-dashbourd/filter?status=Follow_Up",
       icon: <i className="fa-solid fa-phone text-yellow-500 text-xl"></i>,
     },
 
     {
       title: "INTERESTED LEADS",
       value: StatusStats?.Inteersted || 0,
-      links:"/start/agent-dashbourd/filter?status=Inteersted",
+      links: "/start/agent-dashbourd/filter?status=Inteersted",
       icon: <i className="fa-solid fa-heart text-pink-500 text-xl"></i>,
     },
 
     {
       title: "CONTACTED LEADS",
       value: StatusStats?.Contacted || 0,
-      links:"/start/agent-dashbourd/filter?status=Contacted",
+      links: "/start/agent-dashbourd/filter?status=Contacted",
       icon: <i className="fa-solid fa-envelope text-blue-500 text-xl"></i>,
     },
   ];

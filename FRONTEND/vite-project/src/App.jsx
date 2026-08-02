@@ -2,7 +2,7 @@ import "./App.css";
 
 import Login from "./Compnent/Login/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
+import Users from "./Compnent/Users/Users";
 import Register from "./Compnent/Register/Regester";
 import Dashbourd_Agent from "./Compnent/Dash/Dashbourd_Agent";
 import RollRoutes from "./Compnent/AuthRoutes/RollRoutes";
@@ -16,7 +16,10 @@ import InfoLead from "./Compnent/AllLead/InfoLead";
 import FilterStatus from "./Compnent/AllLead/FilterStatus";
 import Dashbourd_TeamLeader from "./Compnent/Dash/Dashbourd_TeamLeader";
 import Tasks from "./Compnent/Tasks/Tasks";
+import InfoUser from "./Compnent/Users/InfoUser";
 // import JustDataEntry from "./Compnent/AuthRoutes/JustDataEntry";
+import Notifications from "./Compnent/Notifications/Notifications";
+// import InfoUser from "./Compnent/Users/InfoUser";
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -74,7 +77,7 @@ const routes = createBrowserRouter([
       {
         path: "infoLead/:id",
         element: (
-          <RollRoutes allowedroes={["agent"]}>
+          <RollRoutes allowedroes={["agent", "admin", "TeamLeader"]}>
             <InfoLead />
           </RollRoutes>
         ),
@@ -82,10 +85,32 @@ const routes = createBrowserRouter([
       {
         path: "TeamLeader",
         element: (
-          <RollRoutes
-            allowedroes={["TeamLeader"]}
-          >
+          <RollRoutes allowedroes={["TeamLeader"]}>
             <Dashbourd_TeamLeader />
+          </RollRoutes>
+        ),
+      },
+      {
+        path: "noti",
+        element: (
+          <RollRoutes allowedroes={["agent"]}>
+            <Notifications />
+          </RollRoutes>
+        ),
+      },
+      {
+        path: "allUsers",
+        element: (
+          <RollRoutes allowedroes={["admin"]}>
+            <Users />
+          </RollRoutes>
+        ),
+      },
+      {
+        path: "infoUsers/:id",
+        element: (
+          <RollRoutes allowedroes={["admin"]}>
+            <InfoUser />
           </RollRoutes>
         ),
       },

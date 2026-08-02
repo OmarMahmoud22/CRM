@@ -14,7 +14,7 @@ export default function InfoLead() {
     async function fetching() {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get(`http://127.0.0.1:5000/api/lead/${id}`, {
+        const res = await axios.get(`http://127.0.0.1:4000/api/lead/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -32,7 +32,7 @@ export default function InfoLead() {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.patch(
-        `http://127.0.0.1:5000/api/LeadS/${id}`,
+        `http://127.0.0.1:4000/api/LeadS/${id}`,
         { status },
         {
           headers: {

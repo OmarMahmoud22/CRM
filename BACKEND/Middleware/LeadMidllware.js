@@ -1,4 +1,4 @@
-const { ModifiedPathsSnapshot } = require("mongoose");
+// const { ModifiedPathsSnapshot } = require("mongoose");
 const Lead = require("../Models/Lead");
 const jwt = require("jsonwebtoken");
 const Auth = async (req, res, next) => {
@@ -13,8 +13,12 @@ const Auth = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
+  console.error(error);
+  return res.status(500).json({
+    msg: error.message,
+    stack: error.stack,
+  });
+}
 };
 
 const CheckRolle = (...role) => {
@@ -26,3 +30,4 @@ const CheckRolle = (...role) => {
 };
 
 module.exports = { Auth, CheckRolle };
+

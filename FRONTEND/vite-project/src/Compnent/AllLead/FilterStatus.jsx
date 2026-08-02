@@ -15,7 +15,7 @@ export default function FilterStatus() {
         const status = searchParams.get("status");
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://127.0.0.1:5000/api/lead/filter?status=${status}`,
+          `http://127.0.0.1:4000/api/lead/filter?status=${status}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

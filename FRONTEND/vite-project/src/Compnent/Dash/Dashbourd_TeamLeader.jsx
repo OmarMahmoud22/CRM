@@ -8,7 +8,7 @@ export default function Dashbourd_TeamLeader() {
     const feching = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://127.0.0.1:5000/api/all-lead", {
+        const res = await axios.get("http://127.0.0.1:4000/api/all-lead", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
