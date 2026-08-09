@@ -1,0 +1,315 @@
+{
+  "info": {
+    "_postman_id": "dc13cb0a-86e1-4282-8f51-77522f60e8e8",
+    "name": "CRM",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "25154191"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "regester",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJpZCI6IjZhMDA5YWJiMmEyNDUzODJlOGI5MmM3MyIsImlhdCI6MTc3OTA5NzExNSwiZXhwIjoxNzc5NzAxOTE1fQ.XKzFRJomHqR3c1G7o9j6D8_vIIKLV_XbnrczGYYrUhA",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\":\"ahmed\",\r\n    \"email\":\"ahmed@gmail.com\",\r\n    \"password\":\"123456789\",\r\n    \"confirm_password\":\"123456789\",\r\n    \"role\":\"SuperViser\"\r\n    \r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3000/api/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"email\":\"fathy@gmail.com\",\r\n    \"password\":\"123456789\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:5000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lead",
+      "item": [
+        {
+          "name": "CREATE LEAD",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiRGF0YWVudHJ5IiwiaWQiOiI2YTBhZGU3MTgxOWI4ZDgyYjNlNTUxNmQiLCJpYXQiOjE3NzkxOTYxNTMsImV4cCI6MTc3OTgwMDk1M30._s7JMCS_UdVeV-gPj2HYDzBRcYIbOIkriSClCVCzQKE",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"mazen amir\",\r\n    \"phone\":\"0104060126\",\r\n    \"email\":\"mazen@gmail.com\",\r\n    \"source\":\"FaceBook\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3000/api/Lead",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "Lead"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE ASSGIN TO",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3000/api/Lead",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "Lead"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "GetLead",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWdlbnQiLCJpZCI6IjZhMGYyNGViYmQ5M2E4ODFiZjYzOTE1NSIsImlhdCI6MTc4MTUxNTQ4NSwiZXhwIjoxNzgyMTIwMjg1fQ.Yy87yMPzWCCg1hTajubZhvjaibYXulW24bzgC0V57eo",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:5000/api/AllLead",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "AllLead"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "info LEAD",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWdlbnQiLCJpZCI6IjZhMGYyNGViYmQ5M2E4ODFiZjYzOTE1NSIsImlhdCI6MTc4MTM2OTQzNSwiZXhwIjoxNzgxOTc0MjM1fQ.H64gD7-wkeoIkoiu23la7RDL4v3lg1BXlXVg6butYQY",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:5000/api/lead/:id",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "lead",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6a1ea7d75d7a823ca97868db"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "filter by status",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Lead",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashbourd Agent",
+      "item": [
+        {
+          "name": "get total lead and her status",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "IsRead",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "get Notifications",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DashbourdAdmin",
+      "item": [
+        {
+          "name": "allusers",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "allLeads",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "info user",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
