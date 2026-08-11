@@ -1,24 +1,22 @@
-// import React from 'react'
-// import { FaPhoneAlt, FaEnvelope, FaUser } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
-// import { MdOutlineSource } from "react-icons/md";
-
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getUserInfo } from "../../redux/slices/UsersSlice";
 import {  FaEnvelope, FaUser } from "react-icons/fa";
-// import { IoCalendarOutline } from "react-icons/io5";
-// import { MdOutlineSource } from "react-icons/md";
-
 import { Link } from "react-router-dom";
+
 export default function InfoUser() {
+
   const user = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const { id } = useParams();
+
   useEffect(() => {
     dispatch(getUserInfo(id));
   }, [dispatch, id]);
+
+
   const details = [
     {
       label: "Name",
@@ -51,7 +49,6 @@ export default function InfoUser() {
               <IoArrowBack />
               Back to Users
             </Link>
-
             <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-logo">
               User profile
             </p>
@@ -62,7 +59,6 @@ export default function InfoUser() {
               Review contact details and update this lead's pipeline status.
             </p>
           </div>
-
           {/* <div
           className={`inline-flex min-h-11 w-fit items-center rounded-full px-4 text-sm font-bold ring-1 ${
             statusClasses[lead.status] ||
@@ -71,8 +67,8 @@ export default function InfoUser() {
         >
           {lead.status || "New"}
         </div> */}
-        </div>
 
+        </div>
         <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
           <div className="rounded-xl border border-line bg-white shadow-sm">
             <div className="border-b border-line p-5">

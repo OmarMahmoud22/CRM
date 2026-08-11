@@ -32,6 +32,7 @@ const regester = async (req, res) => {
     res.status(500).json({ msg: "server error" });
   }
 };
+
 const login = async (req, res) => {
   try {
     const { error, value } = LoginSchema.validate(req.body, {
@@ -53,7 +54,7 @@ const login = async (req, res) => {
       process.env.SECRETKEY,
       { expiresIn: "7d" },
     );
-    res.status(201).json({
+    res.status(200).json({
       msg: "done",
       token,
  
