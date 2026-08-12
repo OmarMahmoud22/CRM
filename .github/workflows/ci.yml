@@ -11,7 +11,7 @@ jobs:
     # cd backend
     # npm ci
 
-    defualts:
+    defaults:
       run:
         working-directory: ./BACKEND
 
