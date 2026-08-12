@@ -16,6 +16,7 @@ import InfoLead from "./Compnent/AllLead/InfoLead";
 import FilterStatus from "./Compnent/AllLead/FilterStatus";
 import Dashbourd_TeamLeader from "./Compnent/Dash/Dashbourd_TeamLeader";
 import Tasks from "./Compnent/Tasks/Tasks";
+import Notifications from "./Compnent/Notifications/Notifications";
 // import JustDataEntry from "./Compnent/AuthRoutes/JustDataEntry";
 const routes = createBrowserRouter([
   {
@@ -89,6 +90,14 @@ const routes = createBrowserRouter([
           </RollRoutes>
         ),
       },
+      {
+        path:"noti",
+        element:(
+          <RollRoutes allowedroes={["agent"]}>
+            <Notifications/>
+          </RollRoutes>
+        )
+      }
     ],
   },
   {

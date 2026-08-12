@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useState } from "react";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 // import {useNavigate} from 'react-router-dom'
 export default function FormCreate() {
   const { register, handleSubmit } = useForm({
@@ -18,11 +19,8 @@ export default function FormCreate() {
   const OnSubmit = async (data) => {
     try {
       data.source = sourse;
-      const token = localStorage.getItem("token");
-      const res = await axios.post("http://127.0.0.1:3000/api/Lead", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.post(`${API_BASE_URL}/Lead`, data, {
+        headers: getAuthHeaders(),
       });
       setError("");
       setMessage(res.data.msg);

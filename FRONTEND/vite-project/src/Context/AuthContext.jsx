@@ -39,13 +39,13 @@
 
 import { createContext, useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import socket from "../Socket/Socket"
+import socket from "../Socket/Socket";
 const userContext = createContext();
 
 const AuthContext = ({ children }) => {
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem("token");
- 
+
     if (!token) return null;
 
     try {
@@ -65,7 +65,7 @@ const AuthContext = ({ children }) => {
     <userContext.Provider
       value={{
         user,
-        role: user?.role?.toString(),
+        role: user?.role?.toString().toLowerCase(),
         logout,
       }}
     >

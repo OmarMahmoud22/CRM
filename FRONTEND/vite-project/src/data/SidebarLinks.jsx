@@ -12,7 +12,7 @@ export const sidebarLinks = {
     },
   ],
 
-  TeamLeader: [
+  teamleader: [
     {
       title: "Dashboard",
       links: "/start/TeamLeader",

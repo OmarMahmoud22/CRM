@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { FaPhoneAlt, FaEnvelope, FaUser } from "react-icons/fa";
 import { IoArrowBack, IoCalendarOutline } from "react-icons/io5";
 import { MdOutlineSource } from "react-icons/md";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function InfoLead() {
   const [lead, setLead] = useState({});
@@ -12,12 +13,9 @@ export default function InfoLead() {
   //   console.log("id:", id);
   useEffect(() => {
     async function fetching() {
-      const token = localStorage.getItem("token");
       try {
-        const res = await axios.get(`http://127.0.0.1:5000/api/lead/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${API_BASE_URL}/lead/${id}`, {
+          headers: getAuthHeaders(),
         });
         console.log(res);
         setLead(res.data.lead);
@@ -30,14 +28,11 @@ export default function InfoLead() {
   }, [id]);
   const handleStatusChange = async (status) => {
     try {
-      const token = localStorage.getItem("token");
       const { data } = await axios.patch(
-        `http://127.0.0.1:5000/api/LeadS/${id}`,
+        `${API_BASE_URL}/LeadS/${id}`,
         { status },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: getAuthHeaders(),
         },
       );
       setLead(data.data);

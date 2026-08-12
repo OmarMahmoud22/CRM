@@ -1,17 +1,15 @@
 // import React from 'react'
 import axios from "axios";
 import { useState, useEffect } from "react";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function Dashbourd_TeamLeader() {
   const [data, setData] = useState([]);
   useEffect(() => {
     const feching = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://127.0.0.1:5000/api/all-lead", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${API_BASE_URL}/all-lead`, {
+          headers: getAuthHeaders(),
         });
         setData(res.data.data);
       } catch (error) {

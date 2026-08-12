@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useState } from "react";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function RegisterForm() {
   const { register, handleSubmit, watch } = useForm({
@@ -22,12 +23,8 @@ export default function RegisterForm() {
     try {
       data.role = role;
 
-      const token = localStorage.getItem("token");
-
-      const res = await axios.post("http://localhost:5000/api/register", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.post(`${API_BASE_URL}/register`, data, {
+        headers: getAuthHeaders(),
       });
 
       setError("");
@@ -70,9 +67,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-gray-700">
-            Full Name
-          </label>
+          <label className="text-sm font-medium text-gray-700">Full Name</label>
 
           <input
             type="text"
@@ -130,7 +125,7 @@ export default function RegisterForm() {
           </label>
 
           <div className="mt-2 grid grid-cols-2 gap-2 rounded-lg border border-slate-100 bg-slate-50 p-2">
-            {roles.map((item , index) => (
+            {roles.map((item, index) => (
               <button
                 key={index}
                 type="button"

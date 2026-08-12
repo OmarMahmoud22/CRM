@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import socket from "../../Socket/Socket";
+import API_BASE_URL from "../../config/api";
+
 export default function LoginForm() {
   const [servererror, setServererror] = useState("");
 
@@ -23,7 +25,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:3000/api/login", data);
+      const res = await axios.post(`${API_BASE_URL}/login`, data);
       const token = res.data.token;
       localStorage.setItem("token", token);
       socket.auth = {
@@ -35,13 +37,13 @@ export default function LoginForm() {
 
       setServererror("");
       const decoded = jwtDecode(token);
-      const userRole = decoded.role?.toString();
+      const userRole = decoded.role?.toString().toLowerCase();
 
       if (userRole === "agent") {
         navigate("/start/agent-dashbourd");
       } else if (userRole === "admin") {
         navigate("/start/admin-dashbourd");
-      } else if (userRole === "TeamLeader") {
+      } else if (userRole === "teamleader") {
         navigate("/start/TeamLeader");
       } else {
         navigate("/AddeLead");

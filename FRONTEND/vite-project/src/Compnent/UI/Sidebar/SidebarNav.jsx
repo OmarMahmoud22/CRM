@@ -21,8 +21,8 @@ export default function SidebarNav({ onNavigate }) {
   //   },
   // ];
   const { role } = UseAuth();
-  // const normalizedRole = role?.toString().toLowerCase();
-  const list = sidebarLinks[role] || [];
+  const normalizedRole = role?.toString().toLowerCase();
+  const list = sidebarLinks[normalizedRole] || [];
   return (
     <nav className="space-y-2 font-manrope text-[#54647A]">
       {list.map((item) => (

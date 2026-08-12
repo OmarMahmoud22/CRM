@@ -4,6 +4,7 @@ import { FaEye } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function AllLead() {
   //   const [data, setData] = useState({});
@@ -12,11 +13,8 @@ export default function AllLead() {
   useEffect(() => {
     async function feching() {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://127.0.0.1:5000/api/AllLead", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${API_BASE_URL}/AllLead`, {
+          headers: getAuthHeaders(),
         });
         // setData(res.data);
         setLead(res.data.leads);

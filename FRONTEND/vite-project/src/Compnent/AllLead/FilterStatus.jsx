@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function FilterStatus() {
   const [searchParams] = useSearchParams();
@@ -13,13 +14,10 @@ export default function FilterStatus() {
     const feching = async () => {
       try {
         const status = searchParams.get("status");
-        const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://127.0.0.1:5000/api/lead/filter?status=${status}`,
+          `${API_BASE_URL}/lead/filter?status=${status}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: getAuthHeaders(),
           },
         );
         setLeadS(res.data.data);
@@ -28,7 +26,7 @@ export default function FilterStatus() {
       }
     };
     feching();
-  }, [status]);
+  }, [searchParams]);
   // const statusClasses = {
   //   New: "bg-blue-50 text-blue-700 ring-blue-100",
   //   Contacted: "bg-cyan-50 text-cyan-700 ring-cyan-100",
