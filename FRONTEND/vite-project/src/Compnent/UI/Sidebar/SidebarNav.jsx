@@ -1,7 +1,8 @@
 // import React from 'react'
 import { NavLink } from "react-router-dom";
 import { sidebarLinks } from "../../../data/SidebarLinks";
-import { UseAuth } from "../../../Context/AuthContext";
+// import { UseAuth } from "../../../Context/AuthContext";
+import { useSelector } from "react-redux";
 export default function SidebarNav({ onNavigate }) {
   // const list = [
   //   {
@@ -20,9 +21,17 @@ export default function SidebarNav({ onNavigate }) {
   //     links: "/start/tasks",
   //   },
   // ];
+<<<<<<< HEAD
   const { role } = UseAuth();
   const normalizedRole = role?.toString().toLowerCase();
   const list = sidebarLinks[normalizedRole] || [];
+=======
+  // const { role } = UseAuth();
+  // const normalizedRole = role?.toString().toLowerCase();
+
+const role = useSelector((state) => state.auth.user?.role);
+  const list = sidebarLinks[role] || [];
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
   return (
     <nav className="space-y-2 font-manrope text-[#54647A]">
       {list.map((item) => (

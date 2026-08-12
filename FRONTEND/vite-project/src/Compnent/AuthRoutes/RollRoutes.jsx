@@ -6,8 +6,12 @@ export default function RollRoutes({ children, allowedroes }) {
   if (!token) {
     return <Navigate to={"/"} />;
   }
-  const decoded = jwtDecode(token)
-  if(!allowedroes.includes(decoded.role))
-    return <Navigate to={"/unauthorized"}/> 
+  const decoded = jwtDecode(token);
+  const userRole = decoded?.role?.toString().toLowerCase();
+  const allowedRoles = allowedroes.map((role) => role.toLowerCase());
+
+  if (!allowedRoles.includes(userRole)) {
+    return <Navigate to={"/unauthorized"} />;
+  }
   return children;
 }

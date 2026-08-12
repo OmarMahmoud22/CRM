@@ -14,8 +14,15 @@ export default function InfoLead() {
   useEffect(() => {
     async function fetching() {
       try {
+<<<<<<< HEAD
         const res = await axios.get(`${API_BASE_URL}/lead/${id}`, {
           headers: getAuthHeaders(),
+=======
+        const res = await axios.get(`http://127.0.0.1:4000/api/lead/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
         });
         console.log(res);
         setLead(res.data.lead);
@@ -29,7 +36,11 @@ export default function InfoLead() {
   const handleStatusChange = async (status) => {
     try {
       const { data } = await axios.patch(
+<<<<<<< HEAD
         `${API_BASE_URL}/LeadS/${id}`,
+=======
+        `http://127.0.0.1:4000/api/LeadS/${id}`,
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
         { status },
         {
           headers: getAuthHeaders(),

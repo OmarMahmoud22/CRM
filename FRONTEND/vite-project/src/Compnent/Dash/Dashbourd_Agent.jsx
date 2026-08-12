@@ -14,8 +14,17 @@ export default function Dashbourd_Agent() {
   useEffect(() => {
     async function feching() {
       try {
+<<<<<<< HEAD
         const res = await axios.get(`${API_BASE_URL}/dashboard`, {
           headers: getAuthHeaders(),
+=======
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get("http://127.0.0.1:4000/api/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
         });
 
         setData(res.data);

@@ -1,5 +1,10 @@
 // import React from 'react'
 
+// import { useEffect } from "react";
+
 export default function Dashbourd_Admin() {
-  return <div>Dashbourd_Admin</div>;
+
+  return (<>
+  hello admin
+  </>);
 }

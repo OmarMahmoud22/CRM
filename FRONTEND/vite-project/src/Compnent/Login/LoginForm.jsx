@@ -1,40 +1,50 @@
 // import React from 'react'
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import socket from "../../Socket/Socket";
+<<<<<<< HEAD
 import API_BASE_URL from "../../config/api";
 
+=======
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/slices/AuthSlice";
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
 export default function LoginForm() {
   const [servererror, setServererror] = useState("");
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { register, handleSubmit } = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
   });
-
   function reg() {
     navigate("/register");
   }
-
   const onSubmit = async (data) => {
+<<<<<<< HEAD
     try {
       const res = await axios.post(`${API_BASE_URL}/login`, data);
       const token = res.data.token;
       localStorage.setItem("token", token);
+=======
+    const resultAction = await dispatch(login(data));
+    if (login.fulfilled.match(resultAction)) {
+      const { token, user } = resultAction.payload;
+      setServererror("");
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
       socket.auth = {
         token,
       };
       socket.connect();
-      // localStorage.setItem("role" ,user.role)
-      // localStorage.setItem("role", res.data.use.role);
+      switch (user.role) {
+        case "agent":
+          navigate("/start/agent-dashbourd");
+          break;
 
+<<<<<<< HEAD
       setServererror("");
       const decoded = jwtDecode(token);
       const userRole = decoded.role?.toString().toLowerCase();
@@ -47,9 +57,21 @@ export default function LoginForm() {
         navigate("/start/TeamLeader");
       } else {
         navigate("/AddeLead");
+=======
+        case "admin":
+          navigate("/start/admin-dashbourd");
+          break;
+
+        case "TeamLeader":
+          navigate("/start/TeamLeader");
+          break;
+
+        default:
+          navigate("/AddeLead");
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
       }
-    } catch (error) {
-      setServererror(error.response?.data?.msg || "Login failed");
+    } else {
+      setServererror(resultAction.payload);
     }
   };
 

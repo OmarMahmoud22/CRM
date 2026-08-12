@@ -23,8 +23,17 @@ export default function RegisterForm() {
     try {
       data.role = role;
 
+<<<<<<< HEAD
       const res = await axios.post(`${API_BASE_URL}/register`, data, {
         headers: getAuthHeaders(),
+=======
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post("http://localhost:4000/api/register", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
       });
 
       setError("");

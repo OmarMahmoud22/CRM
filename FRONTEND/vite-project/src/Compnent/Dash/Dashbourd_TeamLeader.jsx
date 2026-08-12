@@ -8,8 +8,16 @@ export default function Dashbourd_TeamLeader() {
   useEffect(() => {
     const feching = async () => {
       try {
+<<<<<<< HEAD
         const res = await axios.get(`${API_BASE_URL}/all-lead`, {
           headers: getAuthHeaders(),
+=======
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://127.0.0.1:4000/api/all-lead", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
         });
         setData(res.data.data);
       } catch (error) {

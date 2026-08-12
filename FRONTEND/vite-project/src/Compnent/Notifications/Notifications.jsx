@@ -1,10 +1,20 @@
+<<<<<<< HEAD
+=======
+// import React from 'react'
+
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
 import { useNotification } from "../../Context/NotifecationContext";
 
 export default function Notifications() {
   const { notifications, unreadCount } = useNotification();
+<<<<<<< HEAD
 
   return (
     <div className="p-5">
+=======
+  return (
+   <div className="p-5">
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
       <h1 className="text-2xl font-bold">
         Notifications ({unreadCount})
       </h1>
@@ -32,5 +42,10 @@ export default function Notifications() {
         )}
       </div>
     </div>
+<<<<<<< HEAD
   );
 }
+=======
+  )
+}
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373

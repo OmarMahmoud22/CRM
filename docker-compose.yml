@@ -1,0 +1,42 @@
+services:
+
+  backend:
+    build: ./BACKEND
+    container_name: crm-backend
+
+    env_file:
+      - .env
+
+    ports:
+      - "4000:4000"
+
+    volumes:
+      - ./BACKEND:/app
+      - /app/node_modules
+
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: crm-mongodb
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo_data:/data/db
+
+  frontend:
+    build: ./FRONTEND/vite-project
+    container_name: crm-frontend
+
+    ports:
+      - "5173:5173"
+
+    volumes:
+      - ./FRONTEND/vite-project:/app
+      - /app/node_modules
+
+volumes:
+  mongo_data:

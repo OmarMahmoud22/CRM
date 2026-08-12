@@ -1,0 +1,30 @@
+name: CRM CI
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    # cd backend
+    # npm ci
+
+    defualts:
+      run:
+        working-directory: ./BACKEND
+
+    steps:
+      # هات نسخة من الكود الموجود في الـ repository وحطها على الـ Runner.
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Dependencies
+        # npm install
+        run: npm ci
+      - name: Run test
+        run: npm test

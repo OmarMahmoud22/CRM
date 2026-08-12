@@ -15,7 +15,11 @@ export default function FilterStatus() {
       try {
         const status = searchParams.get("status");
         const res = await axios.get(
+<<<<<<< HEAD
           `${API_BASE_URL}/lead/filter?status=${status}`,
+=======
+          `http://127.0.0.1:4000/api/lead/filter?status=${status}`,
+>>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
           {
             headers: getAuthHeaders(),
           },

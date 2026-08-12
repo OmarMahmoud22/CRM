@@ -10,7 +10,13 @@ export const sidebarLinks = {
       links: "/start/AllLead",
       icon: <i className="fa-solid fa-user"></i>,
     },
+    {
+      title:"Users",
+      links:"/start/allUsers",
+      icon:<i className="fa-solid fa-users"></i>
+    }
   ],
+  
 
   teamleader: [
     {
@@ -24,6 +30,7 @@ export const sidebarLinks = {
       icon: <i className="fa-solid fa-user"></i>,
     },
   ],
+
 
   agent: [
     {
@@ -43,3 +50,4 @@ export const sidebarLinks = {
     },
   ],
 };
+
