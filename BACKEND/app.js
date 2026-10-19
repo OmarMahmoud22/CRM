@@ -16,53 +16,24 @@ const port = process.env.PORT || 4000;
 // Middleware
 app.use(express.json());
 
-// CORS Configuration - Supports Localhost, Vercel domains, and OPTIONS Preflight
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "http://localhost:4000",
-  "http://127.0.0.1:5173",
-];
+// const cors = require("cors");
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow non-browser requests (e.g. mobile apps, curl, postman, serverless)
-    if (!origin) return callback(null, true);
-
-    // Allow localhost & local IPs
-    if (
-      /^http:\/\/localhost(:\d+)?$/.test(origin) ||
-      /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)
-    ) {
-      return callback(null, true);
-    }
-
-    // Allow any Vercel deployment (*.vercel.app)
-    try {
-      const url = new URL(origin);
-      if (url.hostname.endsWith(".vercel.app")) {
-        return callback(null, true);
-      }
-    } catch {
-      // Fall through if URL parsing fails
-    }
-
-    // Allow custom FRONTEND_URL if set
-    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
-      return callback(null, true);
-    }
-
-    // Default: allow origin
-    return callback(null, true);
-  },
-  credentials: true,
+  origin: [
+    "https://crm-7jfo.vercel.app", // رابط الفرونت إند الحالي من الصورة
+    "http://localhost:5173"
+  ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
-  optionsSuccessStatus: 200,
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200 // مهم جداً للمتصفحات القديمة وVercel
 };
 
+// تفعيل CORS على مستوى التطبيق بالكامل
 app.use(cors(corsOptions));
 
+// الرد المباشر على أي طلب Preflight OPTIONS بـ 200 لتفادي كود 500
+app.options("*", cors(corsOptions));
 // Explicit preflight handler for OPTIONS requests
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
