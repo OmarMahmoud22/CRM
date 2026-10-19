@@ -12,13 +12,11 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 4000;
 
-// 1. CORS Middleware (Express 5 compatible)
+// 1. CORS Middleware
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser requests (e.g. mobile apps, curl, postman)
     if (!origin) return callback(null, true);
 
-    // Allow localhost & local IPs
     if (
       /^http:\/\/localhost(:\d+)?$/.test(origin) ||
       /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)
@@ -26,17 +24,15 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // Allow any Vercel domain (*.vercel.app) including production and preview URLs
     try {
       const url = new URL(origin);
       if (url.hostname.endsWith(".vercel.app")) {
         return callback(null, true);
       }
     } catch {
-      // Fall through if URL parsing fails
+      // Fall through
     }
 
-    // Allow custom FRONTEND_URL if set
     if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
       return callback(null, true);
     }
@@ -56,7 +52,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Explicit preflight handler for OPTIONS requests - Express 5 compatible (no '*' path)
+// Preflight handler for OPTIONS requests
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
@@ -71,11 +67,13 @@ if (process.env.NODE_ENV === "dev") {
   app.use(morgan("dev"));
 }
 
-// Socket.io
-try {
-  initSocket(server);
-} catch (e) {
-  console.error("Socket init error:", e);
+// تشغيل Socket.io فقط محلياً لتجنب مشاكل Vercel Serverless
+if (process.env.VERCEL !== "1") {
+  try {
+    initSocket(server);
+  } catch (e) {
+    console.error("Socket init error:", e);
+  }
 }
 
 // 3. Health Check
@@ -88,6 +86,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/health", async (req, res) => {
+  // محاولة الاتصال بقاعدة البيانات إن لم تكن متصلة
+  if (mongoose.connection.readyState !== 1) {
+    await main().catch(() => {});
+  }
+
   const dbState = mongoose.connection.readyState;
   const dbStates = {
     0: "disconnected",
@@ -106,7 +109,27 @@ app.get("/api/health", async (req, res) => {
   });
 });
 
-// 4. Routes
+// 4. Middleware للتأكد من اتصال قاعدة البيانات قبل معالجة أي مسار API
+app.use(async (req, res, next) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      const conn = await main();
+      if (!conn && mongoose.connection.readyState !== 1) {
+        return res.status(503).json({
+          msg: "Database connection unavailable. Please check MONGO_URI in server configuration.",
+        });
+      }
+    }
+    next();
+  } catch (err) {
+    return res.status(503).json({
+      msg: "Database connection unavailable. Please check MONGO_URI in server configuration.",
+      error: err.message,
+    });
+  }
+});
+
+// 5. Routes
 const NotiRouter = require("./Routes/NotifecationRoutes");
 app.use("/api", NotiRouter);
 
@@ -124,11 +147,6 @@ app.use((req, res) => {
   res.status(404).json({
     msg: `Endpoint not found: ${req.method} ${req.originalUrl}`,
   });
-});
-
-// Database connection
-main().catch((err) => {
-  console.error("Database connection initialization failed:", err);
 });
 
 if (require.main === module) {
