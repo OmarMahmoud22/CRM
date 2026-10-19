@@ -1,54 +1,57 @@
-// import React from 'react'
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { FaPhoneAlt, FaEnvelope, FaUser } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaUser, FaUserCheck } from "react-icons/fa";
 import { IoArrowBack, IoCalendarOutline } from "react-icons/io5";
 import { MdOutlineSource } from "react-icons/md";
 import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function InfoLead() {
-  const [lead, setLead] = useState({});
+  const [lead, setLead] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+  const [updateMsg, setUpdateMsg] = useState("");
   const { id } = useParams();
-  //   console.log("id:", id);
+
   useEffect(() => {
     async function fetching() {
+      setLoading(true);
       try {
-<<<<<<< HEAD
         const res = await axios.get(`${API_BASE_URL}/lead/${id}`, {
           headers: getAuthHeaders(),
-=======
-        const res = await axios.get(`http://127.0.0.1:4000/api/lead/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
->>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
         });
-        console.log(res);
         setLead(res.data.lead);
       } catch (error) {
-        console.log(error.message);
+        console.error("Error fetching lead:", error.message);
+      } finally {
+        setLoading(false);
       }
     }
 
-    fetching();
+    if (id) {
+      fetching();
+    }
   }, [id]);
+
   const handleStatusChange = async (status) => {
+    setUpdating(true);
+    setUpdateMsg("");
     try {
       const { data } = await axios.patch(
-<<<<<<< HEAD
         `${API_BASE_URL}/LeadS/${id}`,
-=======
-        `http://127.0.0.1:4000/api/LeadS/${id}`,
->>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
         { status },
         {
           headers: getAuthHeaders(),
         },
       );
       setLead(data.data);
+      setUpdateMsg("Status updated successfully!");
+      setTimeout(() => setUpdateMsg(""), 3000);
     } catch (error) {
-      console.log(error.message);
+      console.error("Status update error:", error.message);
+      setUpdateMsg(error.response?.data?.msg || "Failed to update status");
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -68,6 +71,28 @@ export default function InfoLead() {
     Inestagram: "Instagram",
     FaceBook: "Facebook",
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <p className="text-lg font-semibold text-slate-500">Loading lead details...</p>
+      </div>
+    );
+  }
+
+  if (!lead) {
+    return (
+      <div className="p-8 text-center">
+        <p className="text-lg font-semibold text-red-500">Lead not found</p>
+        <Link
+          to="/start/AllLead"
+          className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-white"
+        >
+          Back to leads
+        </Link>
+      </div>
+    );
+  }
 
   const createdAt = lead.createdAt
     ? new Date(lead.createdAt).toLocaleDateString("en-US", {
@@ -98,6 +123,11 @@ export default function InfoLead() {
       label: "Source",
       value: sourceLabels[lead?.source] || lead?.source || "Unknown source",
       icon: <MdOutlineSource />,
+    },
+    {
+      label: "Assigned Agent",
+      value: lead?.Assignto?.full_name || (lead?.Assignto ? "Assigned" : "Unassigned"),
+      icon: <FaUserCheck />,
     },
     {
       label: "Created At",
@@ -183,6 +213,7 @@ export default function InfoLead() {
             </label>
             <select
               id="lead-status"
+              disabled={updating}
               value={lead.status || "New"}
               onChange={(e) => handleStatusChange(e.target.value)}
               className="min-h-12 w-full rounded-xl border border-line bg-secondary px-4 font-semibold text-header outline-none transition focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
@@ -196,10 +227,22 @@ export default function InfoLead() {
             </select>
           </div>
 
+          {updateMsg && (
+            <div
+              className={`mt-4 rounded-xl p-3 text-sm font-semibold ${
+                updateMsg.includes("successfully")
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "bg-red-50 text-red-600"
+              }`}
+            >
+              {updateMsg}
+            </div>
+          )}
+
           <div className="mt-5 rounded-xl bg-blue-50 p-4">
             <p className="text-sm font-semibold text-blue-700">Quick note</p>
             <p className="mt-1 text-sm text-blue-700">
-              Status updates are saved immediately after selection.
+              Status updates are saved immediately after selection and sync in real time.
             </p>
           </div>
         </aside>

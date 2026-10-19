@@ -1,37 +1,15 @@
-// import React from 'react'
 import { NavLink } from "react-router-dom";
 import { sidebarLinks } from "../../../data/SidebarLinks";
-// import { UseAuth } from "../../../Context/AuthContext";
+import { UseAuth } from "../../../Context/AuthContext";
 import { useSelector } from "react-redux";
-export default function SidebarNav({ onNavigate }) {
-  // const list = [
-  //   {
-  //     icon: <i className="fa-solid fa-table-columns text-lg"></i>,
-  //     title: "Dashboard",
-  //     links: "/start/agent-dashbourd",
-  //   },
-  //   {
-  //     icon: <i className="fa-solid fa-user text-lg"></i>,
-  //     title: "Leads",
-  //     links: "/start/AllLead",
-  //   },
-  //   {
-  //     icon: <i className="fa-regular fa-square-check text-lg"></i>,
-  //     title: "Tasks",
-  //     links: "/start/tasks",
-  //   },
-  // ];
-<<<<<<< HEAD
-  const { role } = UseAuth();
-  const normalizedRole = role?.toString().toLowerCase();
-  const list = sidebarLinks[normalizedRole] || [];
-=======
-  // const { role } = UseAuth();
-  // const normalizedRole = role?.toString().toLowerCase();
 
-const role = useSelector((state) => state.auth.user?.role);
-  const list = sidebarLinks[role] || [];
->>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
+export default function SidebarNav({ onNavigate }) {
+  const reduxRole = useSelector((state) => state.auth.user?.role);
+  const { role: authRole } = UseAuth();
+
+  const currentRole = (reduxRole || authRole || "")?.toString().toLowerCase();
+  const list = sidebarLinks[currentRole] || [];
+
   return (
     <nav className="space-y-2 font-manrope text-[#54647A]">
       {list.map((item) => (

@@ -5,9 +5,9 @@ const {
   GetNotifecation,
   UpdateNotificatoin,
 } = require("../Controller/NotifecatoinController");
-const { Auth, CheckRolle } = require("../Middleware/LeadMidllware");
+const { Auth } = require("../Middleware/LeadMidllware");
 
-router.get("/noti", Auth, CheckRolle("agent"), GetNotifecation);
-router.patch("/noti/:id", Auth, CheckRolle("agent"), UpdateNotificatoin);
+router.get("/noti", Auth, GetNotifecation);
+router.patch("/noti/:id", Auth, UpdateNotificatoin);
 
 module.exports = router;

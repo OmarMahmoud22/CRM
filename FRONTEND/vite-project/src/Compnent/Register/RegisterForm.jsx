@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import API_BASE_URL, { getAuthHeaders } from "../../config/api";
 
 export default function RegisterForm() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({
     defaultValues: {
       full_name: "",
       email: "",
@@ -14,35 +15,32 @@ export default function RegisterForm() {
   });
 
   const [error, setError] = useState("");
-  const [role, setRole] = useState("admin");
+  const [success, setSuccess] = useState("");
+  const [role, setRole] = useState("agent");
+  const navigate = useNavigate();
 
   const password = watch("password");
-  const roles = ["admin", "agent", "Dataentry", "SuperViser"];
+  const roles = ["admin", "agent", "TeamLeader", "Dataentry"];
 
   const onSubmit = async (data) => {
+    setError("");
+    setSuccess("");
     try {
       data.role = role;
 
-<<<<<<< HEAD
       const res = await axios.post(`${API_BASE_URL}/register`, data, {
         headers: getAuthHeaders(),
-=======
-      const token = localStorage.getItem("token");
-
-      const res = await axios.post("http://localhost:4000/api/register", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
->>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
       });
 
-      setError("");
-
-      console.log("result", res.data);
-    } catch (error) {
-      setError(error.response?.data?.msg || "failed to register");
-
-      console.log(error.response?.data);
+      setSuccess(`Account for "${data.full_name}" (${role}) created successfully!`);
+      reset();
+    } catch (err) {
+      const msg =
+        err.response?.data?.msg ||
+        (Array.isArray(err.response?.data?.msg)
+          ? err.response.data.msg.join(", ")
+          : "Failed to register user. An admin token is required.");
+      setError(msg);
     }
   };
 
@@ -54,47 +52,63 @@ export default function RegisterForm() {
       >
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">
-            Admin only
+            Admin Management
           </p>
 
           <h1 className="mt-3 text-4xl font-extrabold text-slate-950">
-            Register user
+            Register User
           </h1>
 
           <p className="mt-2 text-sm text-gray-500">
-            Only admins can create new CRM accounts and assign access roles.
+            Create new CRM team accounts and assign access roles.
           </p>
         </div>
 
         <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
           <p className="text-sm font-medium text-blue-900">
-            Admin authorization required
+            Admin Authorization
           </p>
           <p className="mt-1 text-xs leading-5 text-blue-700">
-            Your admin token will be used to approve this registration request.
+            Only logged-in administrators can create new team members.
           </p>
         </div>
+
+        {success && (
+          <div className="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700 border border-emerald-200">
+            {success}
+          </div>
+        )}
+
+        {error && (
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-200">
+            {error}
+          </div>
+        )}
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-700">Full Name</label>
-
           <input
             type="text"
-            placeholder="Enter your full name"
-            {...register("full_name")}
+            placeholder="Enter full name"
+            {...register("full_name", { required: "Full name is required" })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           />
+          {errors.full_name && (
+            <p className="text-xs text-red-500">{errors.full_name.message}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-gray-700">Email</label>
-
+          <label className="text-sm font-medium text-gray-700">Email Address</label>
           <input
             type="email"
-            placeholder="Enter your email"
-            {...register("email")}
+            placeholder="name@company.com"
+            {...register("email", { required: "Email is required" })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           />
+          {errors.email && (
+            <p className="text-xs text-red-500">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -102,35 +116,45 @@ export default function RegisterForm() {
             <label className="text-sm font-medium text-gray-700">
               Password
             </label>
-
             <input
               type="password"
-              placeholder="Enter password"
-              {...register("password")}
+              placeholder="Min 8 characters"
+              {...register("password", {
+                required: "Password is required",
+                minLength: { value: 8, message: "Min 8 characters" },
+              })}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
+            {errors.password && (
+              <p className="text-xs text-red-500">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-gray-700">
               Confirm Password
             </label>
-
             <input
               type="password"
-              placeholder="Confirm password"
+              placeholder="Re-enter password"
               {...register("confirm_password", {
+                required: "Please confirm password",
                 validate: (value) =>
                   value === password || "Passwords do not match",
               })}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
+            {errors.confirm_password && (
+              <p className="text-xs text-red-500">
+                {errors.confirm_password.message}
+              </p>
+            )}
           </div>
         </div>
 
         <div>
           <label className="text-sm font-medium text-gray-700">
-            Assign role
+            Assign Role
           </label>
 
           <div className="mt-2 grid grid-cols-2 gap-2 rounded-lg border border-slate-100 bg-slate-50 p-2">
@@ -160,17 +184,24 @@ export default function RegisterForm() {
         </div>
 
         <p className="text-sm text-gray-500">
-          Selected Role: <span className="font-semibold">{role}</span>
+          Selected Role: <span className="font-semibold text-blue-700">{role}</span>
         </p>
 
         <button
           type="submit"
           className="w-full rounded-lg bg-blue-700 py-3 font-semibold text-white transition hover:bg-blue-800"
         >
-          Create account
+          Create User Account
         </button>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        <div className="flex justify-between pt-2 text-sm text-gray-500">
+          <Link to="/" className="text-blue-600 hover:underline">
+            Back to Login
+          </Link>
+          <Link to="/start/allUsers" className="text-blue-600 hover:underline">
+            View All Users
+          </Link>
+        </div>
       </form>
     </div>
   );

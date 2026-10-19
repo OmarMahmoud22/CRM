@@ -1,16 +1,33 @@
-# React + Vite
+# SalesCore CRM — Frontend Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite 8 frontend for SalesCore Enterprise CRM.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 👥 Demo & Test Accounts (For Vercel Testers)
 
-## React Compiler
+| Role | Email | Password | Primary Dashboard |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@salescore.com` | `password123` | `/start/admin-dashbourd` |
+| **Team Leader** | `teamleader@salescore.com` | `password123` | `/start/TeamLeader` |
+| **Sales Agent** | `agent@salescore.com` | `password123` | `/start/agent-dashbourd` |
+| **Data Entry** | `dataentry@salescore.com` | `password123` | `/AddeLead` |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ⚙️ Environment Configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Add the following environment variables in **Vercel Project Settings > Environment Variables**:
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `VITE_API_URL` | Base API URL of your backend | `https://your-backend.onrender.com/api` |
+| `VITE_SOCKET_URL` | WebSocket server URL for real-time notifications | `https://your-backend.onrender.com` |
+
+---
+
+## 🚀 Scripts
+
+* `npm run dev`: Start local development server on `http://localhost:5173`.
+* `npm run build`: Production bundle compilation with Vite.
+* `npm test`: Run store and route sanity test suite.

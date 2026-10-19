@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 const Lead = require("../Models/Lead");
 const { LeadSchema } = require("./Validation/LeadVlidations");
 const { createNotifecation } = require("../service/NotifecationService");
+
+const normalizeStatus = (status) => {
+  if (status === "Interested") return "Inteersted";
+  if (status === "Follow-Up") return "Follow_Up";
+  return status;
+};
+
 const CreateLead = async (req, res) => {
   try {
     const { error, value } = LeadSchema.validate(req.body, {
@@ -9,59 +16,84 @@ const CreateLead = async (req, res) => {
       stripUnknown: true,
     });
 
-    if (error)
+    if (error) {
       return res
         .status(400)
         .json({ msg: error.details.map((err) => err.message) });
+    }
 
     const { name, phone, email, source } = value;
+    const status = normalizeStatus(value.status || "New");
+
     const data = await Lead.create({
       name,
       phone,
       email,
       source,
+      status,
     });
+
     res.status(201).json({ msg: "Done To Created This Lead", data });
   } catch (error) {
-    res.status(500).json({
-      msg: "server error",
-    });
+    console.error("CreateLead error:", error);
+    res.status(500).json({ msg: "server error" });
   }
 };
 
 const Assignto = async (req, res) => {
   try {
-    const { Assignto } = req.body;
-    if (!mongoose.Types.ObjectId.isValid(req.params.id))
-      return res.status(400).json({ msg: "invalid id" });
-    const data = await Lead.findOneAndUpdate(
-      { _id: req.params.id },
-      { Assignto },
+    const { Assignto: targetUser } = req.body;
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid lead id" });
+    }
+
+    if (targetUser && !mongoose.Types.ObjectId.isValid(targetUser)) {
+      return res.status(400).json({ msg: "Invalid user id for assignment" });
+    }
+
+    const data = await Lead.findByIdAndUpdate(
+      id,
+      { Assignto: targetUser || null },
       { new: true, runValidators: true },
     ).populate("Assignto", "full_name email");
-    if (!data) return res.status(400).json({ msg: "no data" });
-    res.status(201).json({ msg: "updataed", data });
 
-    await createNotifecation({
-      userId: data.Assignto,
-      type: "lead_assigned",
-      title: "New Lead Assigned",
-      body: `Lead ${data.name} has been assigned to you .`,
-      data: {
-        leadId: data._id,
-      },
-    });
+    if (!data) {
+      return res.status(404).json({ msg: "Lead not found" });
+    }
+
+    if (targetUser && data.Assignto) {
+      const assignedUserId = data.Assignto._id || data.Assignto;
+      await createNotifecation({
+        userId: assignedUserId,
+        type: "lead_assigned",
+        title: "New Lead Assigned",
+        body: `Lead "${data.name}" has been assigned to you.`,
+        data: { leadId: data._id },
+      }).catch((err) =>
+        console.warn("Notification dispatch warning:", err.message),
+      );
+    }
+
+    res.status(200).json({ msg: "updated", data });
   } catch (error) {
+    console.error("Assignto error:", error);
     res.status(500).json({ msg: "server error" });
   }
 };
 
 const StatusU = async (req, res) => {
   try {
-    const { status } = req.body;
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const { id } = req.params;
+    let { status } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ msg: "Invalid lead id" });
     }
+
+    status = normalizeStatus(status);
+
     const allowedStatus = [
       "New",
       "Contacted",
@@ -70,22 +102,34 @@ const StatusU = async (req, res) => {
       "Won",
       "Lost",
     ];
+
     if (!allowedStatus.includes(status)) {
       return res.status(400).json({ msg: "Invalid status value" });
     }
-    const data = await Lead.findByIdAndUpdate(
-      req.params.id,
+
+    const query = { _id: id };
+    if (req.user.role === "agent") {
+      query.Assignto = req.user.id;
+    }
+
+    const data = await Lead.findOneAndUpdate(
+      query,
       { status },
       { new: true, runValidators: true },
-    );
+    ).populate("Assignto", "full_name email");
+
     if (!data) {
-      return res.status(404).json({ msg: "Lead not found" });
+      return res
+        .status(404)
+        .json({ msg: "Lead not found or not assigned to you" });
     }
+
     return res.status(200).json({
       msg: "Updated successfully",
       data,
     });
   } catch (error) {
+    console.error("StatusU error:", error);
     return res.status(500).json({ msg: "Server error" });
   }
 };
@@ -93,9 +137,18 @@ const StatusU = async (req, res) => {
 const TotalLead = async (req, res) => {
   try {
     const query = req.user.role === "agent" ? { Assignto: req.user.id } : {};
-    const lead = await Lead.find(query).populate("Assignto", "full_name email");
-    res.status(200).json({ lead, totallead: lead.length });
+    const lead = await Lead.find(query)
+      .populate("Assignto", "full_name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      lead,
+      leads: lead,
+      totallead: lead.length,
+      length: lead.length,
+    });
   } catch (error) {
+    console.error("TotalLead error:", error);
     return res.status(500).json({ msg: error.message });
   }
 };
@@ -103,49 +156,106 @@ const TotalLead = async (req, res) => {
 const InfoLead = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid lead id" });
+    }
+
+    let lead;
     if (req.user.role === "agent") {
       lead = await Lead.findOne({
         _id: id,
         Assignto: req.user.id,
-      });
+      }).populate("Assignto", "full_name email");
     } else {
-      lead = await Lead.findById(id);
+      lead = await Lead.findById(id).populate("Assignto", "full_name email");
     }
-    if (!lead)
-      return res.status(404).json({
-        msg: "Lead not found",
-      });
+
+    if (!lead) {
+      return res.status(404).json({ msg: "Lead not found" });
+    }
 
     res.status(200).json({ lead });
   } catch (error) {
+    console.error("InfoLead error:", error);
     res.status(500).json({ msg: error.message });
   }
 };
 
 const FilterByStatus = async (req, res) => {
   try {
-    const { status } = req.query;
+    let { status } = req.query;
+    status = normalizeStatus(status);
 
-    const data = await Lead.find({ status: status, Assignto: req.user.id });
-    // if (data == null) return res.status(404).json({ msg: "status not found" });
+    const query = {};
+    if (status && status !== "All") {
+      query.status = status;
+    }
+
+    if (req.user.role === "agent") {
+      query.Assignto = req.user.id;
+    }
+
+    const data = await Lead.find(query)
+      .populate("Assignto", "full_name email")
+      .sort({ createdAt: -1 });
+
     res.status(200).json({ data, len: data.length });
   } catch (error) {
+    console.error("FilterByStatus error:", error);
     res.status(500).json({ msg: "server error" });
   }
 };
 
-// const AllLead = async (req, res) => {
-//   try {
-//     const data = await Lead.find().populate({
-//       path: "Assignto",
-//       select: "-_id full_name email",
-//     });
-//     if (!data) return res.status(200).json({ msg: "not found" });
-//     res.status(200).json({ msg: "done", data });
-//   } catch (error) {
-//     res.status(500).json({ msg: error.message });
-//   }
-// };
+const DeleteLead = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid lead id" });
+    }
+
+    const deleted = await Lead.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ msg: "Lead not found" });
+    }
+
+    res.status(200).json({ msg: "Lead deleted successfully", id });
+  } catch (error) {
+    console.error("DeleteLead error:", error);
+    res.status(500).json({ msg: "server error" });
+  }
+};
+
+const UpdateLead = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid lead id" });
+    }
+
+    const { name, phone, email, source, status } = req.body;
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (phone) updateData.phone = phone;
+    if (email) updateData.email = email;
+    if (source) updateData.source = source;
+    if (status) updateData.status = normalizeStatus(status);
+
+    const data = await Lead.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    }).populate("Assignto", "full_name email");
+
+    if (!data) {
+      return res.status(404).json({ msg: "Lead not found" });
+    }
+
+    res.status(200).json({ msg: "Lead updated successfully", data });
+  } catch (error) {
+    console.error("UpdateLead error:", error);
+    res.status(500).json({ msg: "server error" });
+  }
+};
 
 module.exports = {
   CreateLead,
@@ -154,5 +264,6 @@ module.exports = {
   TotalLead,
   InfoLead,
   FilterByStatus,
-  // AllLead,
+  DeleteLead,
+  UpdateLead,
 };

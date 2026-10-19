@@ -1,59 +1,54 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-// import { useParams } from "react-router-dom";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api.js";
+
 const initialState = {
   users: [],
   error: null,
   loading: false,
   length: 0,
-  // id: "",
-  user:null
+  user: null,
 };
 
-const token = localStorage.getItem("token");
-
 export const getUsers = createAsyncThunk(
-  "user/getusers",
-  async (arg, thunkAPI) => {
+  "users/getUsers",
+  async (_, thunkAPI) => {
     try {
       const res = await axios.get(
-        "http://127.0.0.1:4000/api/dashbourd_admin/allusers",
+        `${API_BASE_URL}/dashbourd_admin/allusers`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: getAuthHeaders(),
         },
       );
-      console.log(res.data);
-      const { users, length } = res.data;
+      const users = res.data.users || [];
+      const length = res.data.length ?? users.length;
 
       return {
         users,
         length,
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data.msg);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.msg || "Failed to load users",
+      );
     }
   },
 );
 
 export const getUserInfo = createAsyncThunk(
-  "users/info",
+  "users/getUserInfo",
   async (id, thunkAPI) => {
     try {
-      // const { id } = useParams();
-      const res = await axios.get(`http://127.0.0.1:4000/api/infouser/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.get(`${API_BASE_URL}/infouser/${id}`, {
+        headers: getAuthHeaders(),
       });
-      console.log(res.data.user);
-      const { user } = res.data;
       return {
-        user,
+        user: res.data.user,
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data.msg);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.msg || "Failed to load user info",
+      );
     }
   },
 );
@@ -63,33 +58,36 @@ const usersSlice = createSlice({
   initialState,
   reducers: {},
 
-  extraReducers: (bulder) => {
-    bulder
+  extraReducers: (builder) => {
+    builder
       .addCase(getUsers.pending, (state) => {
-        ((state.loading = true), (state.error = null));
+        state.loading = true;
+        state.error = null;
       })
       .addCase(getUsers.fulfilled, (state, action) => {
-        ((state.users = action.payload.users),
-          (state.length = action.payload.length),
-          (state.loading = false));
+        state.loading = false;
+        state.users = action.payload.users;
+        state.length = action.payload.length;
         state.error = null;
       })
       .addCase(getUsers.rejected, (state, action) => {
-        ((state.loading = false), (state.error = action.payload));
+        state.loading = false;
+        state.error = action.payload;
       })
-      // ----------------------------------------------------------------------------------
+
       .addCase(getUserInfo.pending, (state) => {
-        ((state.loading = true), (state.error = null));
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(getUserInfo.fulfilled,(state , action)=>{
-        state.user = action.payload.user
-        state.loading=false
-        // state.id = action.payload.id
+      .addCase(getUserInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.error = null;
       })
-      .addCase(getUserInfo.rejected , (state , action)=>{
-        state.loading = true,
-        state.error = action.payload
-      })
+      .addCase(getUserInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

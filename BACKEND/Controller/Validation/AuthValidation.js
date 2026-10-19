@@ -3,13 +3,29 @@ const joi = require("joi");
 const RegesterSchema = joi.object({
   full_name: joi.string().required().trim(),
   email: joi.string().email().required().trim(),
-  password: joi.string().min(8).trim(),
-  confirm_password:joi.string().trim().valid(joi.ref("password")).required().messages({"any.only":"passwords do not match"}),
-  role: joi.string().valid("admin", "agent" ,"Dataentry"  , "SuperViser"),
+  password: joi.string().min(8).required().trim(),
+  confirm_password: joi
+    .string()
+    .trim()
+    .valid(joi.ref("password"))
+    .required()
+    .messages({ "any.only": "passwords do not match" }),
+  role: joi
+    .string()
+    .valid(
+      "admin",
+      "agent",
+      "Dataentry",
+      "TeamLeader",
+      "SuperAdmin",
+      "SuperViser",
+    )
+    .default("agent"),
 });
+
 const LoginSchema = joi.object({
   email: joi.string().email().required().trim(),
-  password: joi.string().min(8).trim(),
-})
+  password: joi.string().required().trim(),
+});
 
-module.exports = {RegesterSchema , LoginSchema}
+module.exports = { RegesterSchema, LoginSchema };

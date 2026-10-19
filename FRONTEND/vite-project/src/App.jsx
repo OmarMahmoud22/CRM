@@ -6,7 +6,6 @@ import Register from "./Compnent/Register/Regester";
 import Dashbourd_Agent from "./Compnent/Dash/Dashbourd_Agent";
 import RollRoutes from "./Compnent/AuthRoutes/RollRoutes";
 import Layout from "./Compnent/Layout/Layout";
-// import CreateLead from "./Compnent/pages/CreateLead/CreateLead";
 import CreateLead from "./Compnent/CreateLead/CreateLead";
 import Dashbourd_Admin from "./Compnent/Dash/Dashbourd_Admin";
 import Unauthorized from "./Compnent/AuthRoutes/Unauthorized";
@@ -15,14 +14,9 @@ import InfoLead from "./Compnent/AllLead/InfoLead";
 import FilterStatus from "./Compnent/AllLead/FilterStatus";
 import Dashbourd_TeamLeader from "./Compnent/Dash/Dashbourd_TeamLeader";
 import Tasks from "./Compnent/Tasks/Tasks";
-<<<<<<< HEAD
 import Notifications from "./Compnent/Notifications/Notifications";
-=======
 import InfoUser from "./Compnent/Users/InfoUser";
->>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
-// import JustDataEntry from "./Compnent/AuthRoutes/JustDataEntry";
-import Notifications from "./Compnent/Notifications/Notifications";
-// import InfoUser from "./Compnent/Users/InfoUser";
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -32,7 +26,6 @@ const routes = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-
   {
     path: "/start",
     element: <Layout />,
@@ -40,7 +33,7 @@ const routes = createBrowserRouter([
       {
         path: "agent-dashbourd",
         element: (
-          <RollRoutes allowedroes={["agent"]}>
+          <RollRoutes allowedroes={["agent", "admin", "SuperAdmin"]}>
             <Dashbourd_Agent />
           </RollRoutes>
         ),
@@ -48,7 +41,7 @@ const routes = createBrowserRouter([
       {
         path: "agent-dashbourd/filter",
         element: (
-          <RollRoutes allowedroes={["agent"]}>
+          <RollRoutes allowedroes={["agent", "admin", "SuperAdmin"]}>
             <FilterStatus />
           </RollRoutes>
         ),
@@ -56,7 +49,7 @@ const routes = createBrowserRouter([
       {
         path: "admin-dashbourd",
         element: (
-          <RollRoutes allowedroes={["admin"]}>
+          <RollRoutes allowedroes={["admin", "SuperAdmin"]}>
             <Dashbourd_Admin />
           </RollRoutes>
         ),
@@ -64,7 +57,7 @@ const routes = createBrowserRouter([
       {
         path: "AllLead",
         element: (
-          <RollRoutes allowedroes={["agent", "admin", "TeamLeader"]}>
+          <RollRoutes allowedroes={["agent", "admin", "SuperAdmin", "TeamLeader"]}>
             <AllLead />
           </RollRoutes>
         ),
@@ -72,7 +65,7 @@ const routes = createBrowserRouter([
       {
         path: "tasks",
         element: (
-          <RollRoutes allowedroes={["agent"]}>
+          <RollRoutes allowedroes={["agent", "admin", "SuperAdmin", "TeamLeader"]}>
             <Tasks />
           </RollRoutes>
         ),
@@ -80,7 +73,7 @@ const routes = createBrowserRouter([
       {
         path: "infoLead/:id",
         element: (
-          <RollRoutes allowedroes={["agent", "admin", "TeamLeader"]}>
+          <RollRoutes allowedroes={["agent", "admin", "SuperAdmin", "TeamLeader"]}>
             <InfoLead />
           </RollRoutes>
         ),
@@ -88,24 +81,15 @@ const routes = createBrowserRouter([
       {
         path: "TeamLeader",
         element: (
-          <RollRoutes allowedroes={["TeamLeader"]}>
+          <RollRoutes allowedroes={["TeamLeader", "admin", "SuperAdmin"]}>
             <Dashbourd_TeamLeader />
           </RollRoutes>
         ),
       },
       {
-<<<<<<< HEAD
-        path:"noti",
-        element:(
-          <RollRoutes allowedroes={["agent"]}>
-            <Notifications/>
-          </RollRoutes>
-        )
-      }
-=======
         path: "noti",
         element: (
-          <RollRoutes allowedroes={["agent"]}>
+          <RollRoutes allowedroes={["agent", "admin", "SuperAdmin", "TeamLeader", "Dataentry"]}>
             <Notifications />
           </RollRoutes>
         ),
@@ -113,7 +97,7 @@ const routes = createBrowserRouter([
       {
         path: "allUsers",
         element: (
-          <RollRoutes allowedroes={["admin"]}>
+          <RollRoutes allowedroes={["admin", "SuperAdmin"]}>
             <Users />
           </RollRoutes>
         ),
@@ -121,19 +105,26 @@ const routes = createBrowserRouter([
       {
         path: "infoUsers/:id",
         element: (
-          <RollRoutes allowedroes={["admin"]}>
+          <RollRoutes allowedroes={["admin", "SuperAdmin"]}>
             <InfoUser />
           </RollRoutes>
         ),
       },
->>>>>>> fd9fffb059a049e8b28813acfca05e6bcb7b2373
+      {
+        path: "create-lead",
+        element: (
+          <RollRoutes allowedroes={["Dataentry", "admin", "SuperAdmin"]}>
+            <CreateLead />
+          </RollRoutes>
+        ),
+      },
     ],
   },
   {
     path: "/AddeLead",
     element: (
-      <RollRoutes allowedroes={["Dataentry"]}>
-        <CreateLead />,
+      <RollRoutes allowedroes={["Dataentry", "admin", "SuperAdmin"]}>
+        <CreateLead />
       </RollRoutes>
     ),
   },
@@ -144,11 +135,7 @@ const routes = createBrowserRouter([
 ]);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={routes} />
-    </>
-  );
+  return <RouterProvider router={routes} />;
 }
 
 export default App;

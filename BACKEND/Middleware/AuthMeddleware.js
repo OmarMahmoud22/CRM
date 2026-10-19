@@ -1,17 +1,25 @@
-const User = require(".././Models/User");
 const jwt = require("jsonwebtoken");
+
 const RegesterMiddleWare = async (req, res, next) => {
   try {
-    const AuthHeader = req.headers.authorization;
-    console.log(req.headers);
-    if (!AuthHeader) return res.status(401).json({ msg: "not authorized" });
-    const token = AuthHeader.split(" ")[1];
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ msg: "Authorization token required" });
+    }
+
+    const token = authHeader.split(" ")[1];
     const payload = jwt.verify(token, process.env.SECRETKEY);
-    if (payload.role != "admin")
-      return res.status(401).json({ msg: "not authorized" });
+
+    const userRole = payload.role?.toString().toLowerCase();
+    if (userRole !== "admin" && userRole !== "superadmin") {
+      return res.status(403).json({ msg: "Admin privileges required" });
+    }
+
+    req.user = payload;
     next();
   } catch (error) {
-    res.status(400).json({ msg: "not authorized" });
+    return res.status(401).json({ msg: "Invalid or expired token" });
   }
 };
- module.exports = {RegesterMiddleWare}
+
+module.exports = { RegesterMiddleWare };

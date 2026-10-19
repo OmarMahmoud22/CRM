@@ -1,22 +1,44 @@
 import FormCreate from "./FormCreate";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+
 export default function CreateLead() {
   const navigate = useNavigate();
-  const handelNav = () => {
+  const location = useLocation();
+
+  const isStandalone = location.pathname === "/AddeLead";
+
+  const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("full_name");
     navigate("/");
   };
+
   return (
-    <main className="min-h-screen bg-[#F2F4F6] px-4 py-6 font-inter sm:px-6 lg:px-8">
-      <button
-        className="md:p-5 p-2 bg-red-500 text-white rounded-2xl font-bold md:text-2xl shadow-2xl mb-2"
-        onClick={handelNav}
-      >
-        LogOut
-      </button>
-      <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-5xl items-center justify-center">
-        <div className="flex flex-col justify-around gap-5 relative">
+    <main className={isStandalone ? "min-h-screen bg-slate-50 px-4 py-8 font-inter" : ""}>
+      {isStandalone && (
+        <div className="mx-auto max-w-5xl flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-bold">
+              SC
+            </div>
+            <div>
+              <h1 className="font-extrabold text-slate-900 text-lg">SalesCore Intake</h1>
+              <p className="text-xs text-slate-500">Data Entry Portal</p>
+            </div>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-100 transition"
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
+
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-lg">
           <FormCreate />
         </div>
       </div>

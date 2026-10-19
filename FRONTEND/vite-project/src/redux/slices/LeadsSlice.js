@@ -1,37 +1,33 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import API_BASE_URL, { getAuthHeaders } from "../../config/api.js";
 
 const initialState = {
   loading: false,
   error: null,
   leads: [],
-  //   token: null,
   length: 0,
 };
 
 export const getAllLead = createAsyncThunk(
-  "lead/AllLeads",
-  async (thunkAPI) => {
+  "lead/getAllLead",
+  async (_, thunkAPI) => {
     try {
-        
-        const token = localStorage.getItem("token");
-      const res = await axios.get(
-        "http://127.0.0.1:4000/api/dashbourd_admin/allLead",
-        {headers:{
-            Authorization:`Bearer ${token}`
-        }}
-      );
-      console.log(res.data);
-      
-      const leads = res.data.all_leads;
-      const leangth = res.data.length;
+      const res = await axios.get(`${API_BASE_URL}/dashbourd_admin/allLead`, {
+        headers: getAuthHeaders(),
+      });
+
+      const leads = res.data.all_leads || res.data.lead || [];
+      const length = res.data.length ?? res.data.totallead ?? leads.length;
+
       return {
         leads,
-        leangth,
-        // token,
+        length,
       };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data.msg || "no leads");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.msg || "Failed to load leads",
+      );
     }
   },
 );
@@ -39,7 +35,15 @@ export const getAllLead = createAsyncThunk(
 const leadSlice = createSlice({
   name: "lead",
   initialState,
-  reducers: {},
+  reducers: {
+    updateLeadInState: (state, action) => {
+      const updated = action.payload;
+      const index = state.leads.findIndex((l) => l._id === updated._id);
+      if (index !== -1) {
+        state.leads[index] = { ...state.leads[index], ...updated };
+      }
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -55,9 +59,10 @@ const leadSlice = createSlice({
       })
       .addCase(getAllLead.rejected, (state, action) => {
         state.loading = false;
-         state.error = action.payload;
+        state.error = action.payload;
       });
   },
 });
 
+export const { updateLeadInState } = leadSlice.actions;
 export default leadSlice.reducer;

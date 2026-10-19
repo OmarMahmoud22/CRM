@@ -1,10 +1,12 @@
 import { io } from "socket.io-client";
+import { SOCKET_URL } from "../config/api";
 
-const token = localStorage.getItem("token");
-
-const socket = io("http://lockalhost:4000", {
+const socket = io(SOCKET_URL, {
   autoConnect: false,
-  auth: { token },
+  auth: (cb) => {
+    const token = localStorage.getItem("token");
+    cb({ token });
+  },
 });
 
 export default socket;

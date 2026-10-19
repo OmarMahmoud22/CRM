@@ -7,23 +7,55 @@ const {
   StatusU,
   InfoLead,
   FilterByStatus,
-  // AllLead,
+  TotalLead,
+  DeleteLead,
+  UpdateLead,
 } = require("../Controller/LeadController");
 
 const { Auth, CheckRolle } = require("../Middleware/LeadMidllware");
 
-const { TotalLead } = require("../Controller/LeadController");
-router.post("/Lead", Auth, CheckRolle("Dataentry"), CreateLead);
-router.patch("/Lead/:id", Auth, CheckRolle("TeamLeader"), Assignto);
-router.patch("/LeadS/:id", Auth, CheckRolle("agent"), StatusU);
+// Create Lead (Dataentry, Admin, SuperAdmin)
+router.post("/Lead", Auth, CheckRolle("Dataentry", "admin"), CreateLead);
+router.post("/lead", Auth, CheckRolle("Dataentry", "admin"), CreateLead);
+
+// Assign Lead (TeamLeader, Admin, SuperAdmin)
+router.patch("/Lead/:id", Auth, CheckRolle("TeamLeader", "admin"), Assignto);
+router.patch("/lead/:id", Auth, CheckRolle("TeamLeader", "admin"), Assignto);
+
+// Update Status (Agent, TeamLeader, Admin, SuperAdmin)
+router.patch("/LeadS/:id", Auth, CheckRolle("agent", "TeamLeader", "admin"), StatusU);
+router.patch("/lead/status/:id", Auth, CheckRolle("agent", "TeamLeader", "admin"), StatusU);
+
+// Lead Queries
 router.get(
   "/AllLead",
   Auth,
   CheckRolle("agent", "TeamLeader", "admin"),
   TotalLead,
 );
-router.get("/lead/filter", Auth, CheckRolle("agent"), FilterByStatus);
-router.get("/lead/:id", Auth, CheckRolle("agent" , "admin" , "TeamLeader"), InfoLead);
-// router.get("/all-lead", Auth, CheckRolle("TeamLeader", "admin"), AllLead);
+router.get(
+  "/all-lead",
+  Auth,
+  CheckRolle("agent", "TeamLeader", "admin"),
+  TotalLead,
+);
+
+router.get(
+  "/lead/filter",
+  Auth,
+  CheckRolle("agent", "TeamLeader", "admin"),
+  FilterByStatus,
+);
+
+router.get(
+  "/lead/:id",
+  Auth,
+  CheckRolle("agent", "admin", "TeamLeader"),
+  InfoLead,
+);
+
+// Update & Delete Lead Details
+router.put("/lead/:id", Auth, CheckRolle("admin", "TeamLeader"), UpdateLead);
+router.delete("/lead/:id", Auth, CheckRolle("admin"), DeleteLead);
 
 module.exports = router;
