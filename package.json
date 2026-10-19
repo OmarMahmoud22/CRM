@@ -1,0 +1,8 @@
+{
+  "name": "salescore-crm",
+  "private": true,
+  "scripts": {
+    "build": "cd FRONTEND/vite-project && npm install && npm run build"
+  }
+}
+
