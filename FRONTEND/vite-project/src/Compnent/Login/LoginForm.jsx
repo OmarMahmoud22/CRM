@@ -188,8 +188,14 @@ export default function LoginForm() {
 
           {/* Error Message */}
           {servererror && (
-            <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-              {servererror}
+            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 shadow-xs">
+              <div className="flex items-start gap-2.5">
+                <i className="fa-solid fa-circle-exclamation text-red-600 mt-0.5 text-base"></i>
+                <div className="space-y-1">
+                  <p className="font-bold text-red-800">Authentication Error</p>
+                  <p className="font-mono text-xs text-red-700 break-words">{servererror}</p>
+                </div>
+              </div>
             </div>
           )}
 

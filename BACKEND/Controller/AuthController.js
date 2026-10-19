@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const User = require("../Models/User");
 const {
   RegesterSchema,
@@ -7,6 +8,12 @@ const {
 
 const regester = async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        msg: "Database connection unavailable. Please check MONGO_URI in server configuration.",
+      });
+    }
+
     const { error, value } = RegesterSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
@@ -54,6 +61,12 @@ const regester = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        msg: "Database connection unavailable. Please check MONGO_URI in server configuration.",
+      });
+    }
+
     const { error, value } = LoginSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,

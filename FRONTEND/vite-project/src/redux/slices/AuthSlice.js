@@ -53,8 +53,31 @@ const getInitialAuthState = () => {
 const initialState = getInitialAuthState();
 
 export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
+  const targetUrl = `${API_BASE_URL}/login`;
+
+  // Diagnostic logging requested for troubleshooting login connectivity
+  console.log("[Auth/Login] Dispatching request:", {
+    fullTargetUrl: targetUrl,
+    apiBaseUrl: API_BASE_URL,
+    viteEnvApiUrl:
+      typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL,
+    payload: {
+      email: data?.email,
+      password: data?.password ? "***" : undefined,
+    },
+  });
+
   try {
-    const res = await axios.post(`${API_BASE_URL}/login`, data);
+    const res = await axios.post(targetUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("[Auth/Login] Response received:", {
+      status: res.status,
+      data: res.data,
+    });
 
     const token = res.data.token;
     const full_name = res.data.full_name || "";
@@ -71,9 +94,32 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
       full_name,
     };
   } catch (error) {
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.msg || "Login failed",
-    );
+    const status = error.response?.status;
+    const responseData = error.response?.data;
+
+    let errorDetail = "";
+    if (status) {
+      const backendMsg =
+        typeof responseData === "string"
+          ? responseData
+          : responseData?.msg ||
+            responseData?.message ||
+            JSON.stringify(responseData);
+      errorDetail = `[HTTP ${status}] ${backendMsg || "Server error"}`;
+    } else if (error.request) {
+      errorDetail = `[Network Error] Failed to reach backend at ${targetUrl}. Check CORS or server status.`;
+    } else {
+      errorDetail = error.message || "Login failed";
+    }
+
+    console.error("[Auth/Login] Request failed:", {
+      targetUrl,
+      status,
+      responseData,
+      errorMessage: error.message,
+    });
+
+    return thunkAPI.rejectWithValue(errorDetail);
   }
 });
 
