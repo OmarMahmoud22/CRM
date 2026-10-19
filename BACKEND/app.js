@@ -138,5 +138,6 @@ if (require.main === module) {
 }
 
 module.exports = app;
+module.exports.default = app;
 module.exports.app = app;
 module.exports.server = server;
